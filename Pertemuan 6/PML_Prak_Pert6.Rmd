@@ -1,0 +1,864 @@
+------------------------------------------------------------------------
+
+---
+title: "PML_Prak_Pert6"
+author: "Anindya Septyani G1401221074"
+date: "2024-09-15"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Penduga Model Berpangkat Penuh 2
+
+## Model Regresi Linear
+
+Model regresi linier digunakan untuk memodelkan hubungan antara variabel dependen $y$ dan satu atau lebih variabel independen $x_1, x_2, ..., x_k$. Rumus umumnya adalah:
+
+$$
+y_i= \beta_0 +\beta_1x_{i1}+\beta_2x_{i1}+...+\beta_kx_{ik}+\epsilon_i
+$$
+
+Di mana:
+
+-   $y_i$ adalah nilai dependen pada pengamatan ke-i
+
+-   $x_{ij}$ adalah nilai variabel independen ke-j pada pengamatan ke-i
+
+-   $\beta_0$ adalah intercept atau konstanta
+
+-   $\beta_j$ adalah koefisien regresi untuk variabel $x_j$, yang menujukkan perubahan rata-rata dalam y untuk setiap perubahan dalam $x_j$, dengan asumsi variabel lain konstan.
+
+-   $\epsilon_i$ adalah error atau residual untuk pengamatan ke-i, yang diasumsikan berdistribusi normal dengan rata-rata dan varians konstan $\sigma^2$
+
+### Asumsi dalam Regresi Linier
+
+1.  **Linearitas:** Hubungan antara variabel dependen dan independen adalah linear
+2.  **Independensi Error:** Error dari pengamatan satu tidak berkorelasi dengan error dari pengamatan lainnya.
+3.  **Homoskedastisitas:** Varians error adalah konstan untuk semua nilai dari variabel independen
+4.  **Normalitas Error:** Error mengikuti distribusi normal dengan rata-rata nol
+
+### Implementasi R
+
+```{r}
+# Data Simulasi
+set.seed(123)
+n <- 100
+k <- 3
+X <- matrix(rnorm(n * k), n, k)
+X <- cbind(1, X) #Menambahkan intercept 
+beta <- c(2, -1, 0.5, 1.5)
+epsilon <- rnorm(n)
+y <- X %*% beta + epsilon
+
+# Model Regresi Linear
+model <- lm(y ~ X[, 2] + X[, 3] + X[, 4])
+
+# Menampilkan Ringkasan Model
+summary(model)
+```
+
+## Selang Kepercayaan untuk Parameter Koefisien
+
+Selang kepercayaan memberikan rentang nilai di mana kita memperkirakan parameter populasi ($\beta_j$) berada dengan tingkat keyakinan tertentu, misalnya 95%. Jika kita membuat banyak sampel dan menghitung selang kepercayaan untuk masing-masing sampel, sekitar 95% dari selang tersebbut akan mencakup nilai parameter yang sebenarnya.
+
+Formula untuk selang kepercayaan parameter $\beta_j$ adalah:
+
+$$
+\hat{\beta}_j \pm t_{a/2, n-p} \times SE(\hat{\beta}_j)
+$$
+
+Di mana:
+
+-   $t_{a/2, n-p}$ adalah nilai dependen pada pengamatan ke-i
+
+-   $SE(\hat\beta_j)$ adalah standar error dari koefisien $\hat\beta_j$, yang menunjukkan seberapa jauh nilai koefisien yang diperkirakan mungkin berbeda dari nilai sebenarnya dalam populasi.
+
+Standar error $SE(\hat\beta_j)$ dihitung sebagai berikut
+
+$$
+SE(\hat\beta_j)= \sqrt{\hat{\sigma}^2 (X^T X)^{-1}_{jj}}
+$$
+
+Di mana $\hat\sigma^2$ adalah estimasi dari varians error.
+
+### Implementasi di R
+
+```{r}
+# Selang Kepercayaan untuk Koefisien Model
+confint(model)
+```
+
+## Selang Kepercayaan untuk Dugaan Rata-Rata Peubah Respon
+
+Selang kepercayaan untuk rata-rata prediksi titik $x^*$ adalah interval di mana kita memperkirakan rata-rata respons pada nilai tersebut berada, dengan tingkat keyakinan tertentu. Selang kepercayaan untuk rata-rata prediksi dihitung sebagai:
+
+$$
+\hat{y} \pm t_{\alpha/2, n-p} \times \sqrt{x^{*T} (X^T X)^{-1} x^* \sigma^2}
+$$
+
+Di mana:
+
+-   $\hat y^*$ adalah prediksi untuk nilai $x^*$
+
+-   $x^*$ adalah vektor baris dari nilai-nilai prediktor untuk pengamatan baru.
+
+-   $(X^TX)^{-1}$ adalah matriks invers dari $X^TX$
+
+Selang kepercayaan ini mengevaluasi ketidakpastian dalam estimasi rata-rata $y$ pada $x^*$.
+
+### Implementasi di R
+
+```{r}
+# Prediksi dengan Selang Kepercayaan
+new_data <- data.frame(X1 = 0.5, X2 = -1.2, X3 = 0.3)
+predict(model, newdata = new_data, interval = "confidence")
+```
+
+## Selang Prediksi untuk Dugaan Peubah Respon
+
+Selang prediksi lebih luas daripada selang kepercayaan karena selang prediksi mencakup ketidakpastian tambahan terkait varians error individual. Selang prediksi untuk suatu observasi baru pada titik $x^*$ diberikan oleh:
+
+$$
+\hat{y} \pm t_{\alpha/2, n-p} \times \sqrt{x^{*T} (X^T X)^{-1} x^* \sigma^2}
+$$
+
+Komponen $\sigma^2$ tambahan mencerminkan varians tambahan dari error dalam observasi baru yang sebenarnya.
+
+### Implementasi di R
+
+```{r}
+# Prediksi dengan Selang Prediksi
+predict(model, newdata = new_data, interval = "prediction")
+```
+
+## Pengujian Hipotesis
+
+Pengujian hipotesis dalam konteks regresi linier umumnya dilakukan untuk menentukan apakah ada cukup bukti dalam data untuk menyimpulkan bahwa koefisien regresi $\beta_j$ berbeda dari nol (tidak signifikan).
+
+Hipotesis nol dan alternatif adalah:
+
+-   $H_0:\beta_j=0$ (Koefisien $\beta_j$ tidak berpengaruh)
+
+-   $H_\alpha:\beta_j\neq0$ (Koefisien $\beta_j$ berpengaruh)
+
+Uji Statistik t digunakan untuk menguji hipotesis ini:
+
+$$
+t = \frac{\hat{\beta}_j}{SE(\hat{\beta}_j)}
+$$
+
+Jika nilai $p$ yang dihasilkan lebih kecil dari tingkat signifikansi yang ditetapkan (misalnya 0,05), maka kita menolak hipotesis nol, yang berarti ada bukti yang cukup untuk mengatakan bahwa $\beta_j$ signifikan secara statistik.
+
+### Implementasi di R
+
+```{r}
+# Pengujian Hipotesis untuk Parameter Model
+summary(model)$coefficients
+```
+
+## Latihan Soal
+
+### Soal 1: Pengaruh Pendidikan terhadap Gaji
+
+Seorang ekonom ingin mengkaji pengaruh lama pendidikan (dalam tahun) terhadap gaji bulanan (dalam ribuan dolar) dari para pekerja di sektor swasta. Data yang dikumpulkan dari 6 pekerja adalah sebagai berikut:
+
+```{r}
+# Soal 
+x1 <- c(12, 14, 16, 18, 20, 22)
+y1 <- c(2.5, 3.0, 3.5, 4.5, 5.0, 5.5)
+n1 <- 6
+```
+
+a\. Tentukan estimasi untuk parameter $\beta_0$ dan $\beta_1$ menggunakan metode matriks
+
+```{r}
+X1 <- cbind(1, x1)
+X1
+
+XtX1 <- t(X1) %*% X1
+XtX1
+
+XtX_inv1 <- solve(XtX1)
+XtX_inv1
+
+XtY1 <- t(X1) %*% y1
+XtY1
+
+beta_hat1 <- XtX_inv1 %*% XtY1
+beta_hat1
+```
+
+Jadi, estimasi parameter regresi adalah $\beta_0 = -1.342$ dan $\beta_1=0.314$
+
+b\. Hitung selang kepercayaan 95% untuk Koefisien $\beta_1$
+
+Untuk menghitung selang kepercayaan untuk $\beta_1$, kita perlu menghitung varians estimator $\hat\beta$ dan kesalahan standar (standard error) dari $\hat\beta_1$
+
+```{r}
+Yhat1 <- X1 %*% beta_hat1
+Yhat1
+
+# Residual Sum of Squares (RSS)
+RSS1 <- sum((y1 - Yhat1)^2)
+RSS1
+
+# Estimasi Varians 
+sigma2_1 <- RSS1 / (n1 - 2)
+sigma2_1
+
+# Varians 
+var1 <- sigma2_1 %*% XtX_inv1[2, 2]
+var1
+
+# Kesalahan Standar beta 1
+SE1 <- sqrt(var1)
+SE1
+
+# Hitung nilai t-statistik
+t_value1 <- qt(1 - 0.05/2, df = n1 - 2)
+t_value1
+
+# Selang Kepercayaan 95% untuk beta 1
+lowerCI1 <- beta_hat1[2,] - t_value1 * SE1
+lowerCI1
+
+upperCI1 <- beta_hat1[2,] + t_value1 * SE1
+upperCI1
+```
+
+Jadi, selang kepercayaan 95% untuk $\beta1$ adalah $(0.265, 0.362)$
+
+### Soal 2: Hubungan Antara Konsumsi Listrik dan Pendapatan Rumah Tangga
+
+Seorang peneliti ingin mengetahui hubungan antara konsumsi listrik bulanan (dalam kWh) dan pendapatan rumah tangga bilanan (dalam ribuan dollar). Data dari 5 rumah tangga adalah sebagai berikut:
+
+```{r}
+# Soal
+x2 <- c(100, 150, 200, 250, 300)
+y2 <- c(3.2, 4.1, 5.0, 5.8, 6.5)
+n2 <- 5
+```
+
+a\. Tentukan estimasi untuk parameter $\beta_0$ dan $\beta_1$ menggunakan metode matriks
+
+```{r}
+X2 <- cbind(1, x2) 
+X2  
+
+XtX2 <- t(X2) %*% X2 
+XtX2  
+
+XtX_inv2 <- solve(XtX2) 
+XtX_inv2  
+
+XtY2 <- t(X2) %*% y2 
+XtY2  
+
+beta_hat2 <- XtX_inv2 %*% XtY2
+beta_hat2
+```
+
+Jadi, estimasi parameter regresi adalah $\beta_0 = 1.6$ dan $\beta_1=0.016$
+
+b\. Hitung selang kepercayaan 95% untuk Koefisien $\beta_1$
+
+Untuk menghitung selang kepercayaan untuk $\beta_1$, kita perlu menghitung varians estimator $\hat\beta$ dan kesalahan standar (standard error) dari $\hat\beta_1$
+
+```{r}
+Yhat2 <- X2 %*% beta_hat2 
+Yhat2  
+
+# Residual Sum of Squares (RSS) 
+RSS2 <- sum((y2 - Yhat2)^2) 
+RSS2  
+
+# Estimasi Varians  
+sigma2_2 <- RSS2 / (n2 - 2) 
+sigma2_2  
+
+# Varians  
+var2 <- sigma2_2 %*% XtX_inv2[2, 2] 
+var2  
+
+# Kesalahan Standar beta 1 
+SE2 <- sqrt(var2) 
+SE2 
+
+# Hitung nilai t-statistik 
+t_value2 <- qt(1 - 0.05/2, df = n2 - 2) 
+t_value2  
+
+# Selang Kepercayaan 95% untuk beta 1 
+lowerCI2 <- beta_hat2[2,] - t_value2 * SE2 
+lowerCI2
+
+upperCI2 <- beta_hat2[2,] + t_value2 * SE2
+upperCI2
+```
+
+Jadi, selang kepercayaan 95% untuk $\beta1$ adalah $(0.014, 0.018)$
+
+### Soal 3: Dampak Iklan Terhadap Penjualan Produk
+
+Seorang manajer pemasaran ingin mempelajari dampak jumlah uang yanng dihabiskan untuk iklan (dalam ribuan dolar) terhadap penjualan produk (dalam ribuan unit). Data dari 6 bulan kampanye iklan adalah sebagai berikut:
+
+```{r}
+# Soal
+x3 <- c(5, 10, 15, 20, 25, 30)
+y3 <- c(20, 25, 30, 35, 40, 45)
+n3 <- 6
+```
+
+a\. Tentukan estimasi untuk parameter $\beta_0$ dan $\beta_1$ menggunakan metode matriks
+
+```{r}
+X3 <- cbind(1, x3)  
+X3    
+
+XtX3 <- t(X3) %*% X3  
+XtX3    
+
+XtX_inv3 <- solve(XtX3)  
+XtX_inv3    
+
+XtY3 <- t(X3) %*% y3  
+XtY3    
+
+beta_hat3 <- XtX_inv3 %*% XtY3 
+beta_hat3
+```
+
+Jadi, estimasi parameter regresi adalah $\beta_0 = 15$ dan $\beta_1=1$
+
+b\. Hitung selang kepercayaan 95% untuk Koefisien $\beta_1$
+
+Untuk menghitung selang kepercayaan untuk $\beta_1$, kita perlu menghitung varians estimator $\hat\beta$ dan kesalahan standar (standard error) dari $\hat\beta_1$
+
+```{r}
+Yhat3 <- X3 %*% beta_hat3  
+Yhat3    
+
+# Residual Sum of Squares (RSS)  
+RSS3 <- sum((y3 - Yhat3)^2)  
+RSS3    
+
+# Estimasi Varians   
+sigma2_3 <- RSS3 / (n3 - 2)  
+sigma2_3    
+
+# Varians   
+var3 <- sigma2_3 %*% XtX_inv3[2, 2]  
+var3    
+
+# Kesalahan Standar beta 1  
+SE3 <- sqrt(var3)  
+SE3   
+
+# Hitung nilai t-statistik  
+t_value3 <- qt(1 - 0.05/2, df = n3 - 2)  
+t_value3    
+
+# Selang Kepercayaan 95% untuk beta 1  
+lowerCI3 <- beta_hat3[2,] - t_value3 * SE3  
+lowerCI3  
+
+upperCI3 <- beta_hat3[2,] + t_value3 * SE3 
+upperCI3
+```
+
+Jadi, selang kepercayaan 95% untuk $\beta1$ adalah $(1, 1)$.
+
+### Soal 4: Hubungan Antara Umur dan Pengeluaran untuk Hiburan
+
+Seorang sosiolog ingin mengkaji hubungan antara individu (dalam tahun) dan pengeluaran bulanan mereka untuk hiburan (dalam ratusan dollar). Data dari 7 individu adalah sebagai berikut.
+
+```{r}
+# Soal 
+x4 <- c(20, 25, 30, 35, 40, 45, 50)
+y4 <- c(1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5)
+n4 <- 7
+```
+
+a\. Tentukan estimasi untuk parameter $\beta_0$ dan $\beta_1$ menggunakan metode matriks
+
+```{r}
+X4 <- cbind(1, x4)   
+X4      
+
+XtX4 <- t(X4) %*% X4   
+XtX4      
+
+XtX_inv4 <- solve(XtX4)   
+XtX_inv4
+
+XtY4 <- t(X4) %*% y4   
+XtY4      
+
+beta_hat4 <- XtX_inv4 %*% XtY4  
+beta_hat4
+```
+
+Jadi, estimasi parameter regresi adalah $\beta_0 = -0.5$ dan $\beta_1=0.1$
+
+b\. Hitung selang kepercayaan 95% untuk Koefisien $\beta_1$
+
+Untuk menghitung selang kepercayaan untuk $\beta_1$, kita perlu menghitung varians estimator $\hat\beta$ dan kesalahan standar (standard error) dari $\hat\beta_1$
+
+```{r}
+Yhat4 <- X4 %*% beta_hat4   
+Yhat4
+
+# Residual Sum of Squares (RSS)   
+RSS4 <- sum((y4 - Yhat4)^2)   
+RSS4
+
+# Estimasi Varians    
+sigma2_4 <- RSS4 / (n4 - 2)   
+sigma2_4
+
+# Varians    
+var4 <- sigma2_4 %*% XtX_inv4[2, 2]   
+var4
+
+# Kesalahan Standar beta 1   
+SE4 <- sqrt(var4)   
+SE4 
+
+# Hitung nilai t-statistik   
+t_value4 <- qt(1 - 0.05/2, df = n4 - 2)   
+t_value4      
+
+# Selang Kepercayaan 95% untuk beta 1   
+lowerCI4 <- beta_hat4[2,] - t_value4 * SE4
+lowerCI4
+
+upperCI4 <- beta_hat4[2,] + t_value4 * SE4  
+upperCI4
+```
+
+Jadi, selang kepercayaan 95% untuk $\beta1$ adalah $(0.1, 0.1)$.
+
+### Soal 5: Pengaruh Suku Bunga terhadap Investasi
+
+Seorang analisis keuangan ingin mengetahui pengaruh tingkat sungu bunda (dalam persen) terhadap jumlah investasi perusahaan (dalam juta dollar). Data dari 6 perusahaan adalah sebagai berikut:
+
+```{r}
+# Soal
+x5 <- c(3, 4, 5, 6, 7, 8)
+y5 <- c(10, 12, 15, 18, 20, 22)
+n5 <- 6
+```
+
+a\. Tentukan estimasi untuk parameter $\beta_0$ dan $\beta_1$ menggunakan metode matriks
+
+```{r}
+X5 <- cbind(1, x5)   
+X5      
+
+XtX5 <- t(X5) %*% X5   
+XtX5
+
+XtX_inv5 <- solve(XtX5)   
+XtX_inv5      
+
+XtY5 <- t(X5) %*% y5   
+XtY5      
+
+beta_hat5 <- XtX_inv5 %*% XtY5  
+beta_hat5
+```
+
+Jadi, estimasi parameter regresi adalah $\beta_0 = 2.495$ dan $\beta_1=2.485$
+
+b\. Hitung selang kepercayaan 95% untuk Koefisien $\beta_1$
+
+Untuk menghitung selang kepercayaan untuk $\beta_1$, kita perlu menghitung varians estimator $\hat\beta$ dan kesalahan standar (standard error) dari $\hat\beta_1$
+
+```{r}
+Yhat5 <- X5 %*% beta_hat5   
+Yhat5
+
+# Residual Sum of Squares (RSS)   
+RSS5 <- sum((y5 - Yhat5)^2)   
+RSS5
+
+# Estimasi Varians    
+sigma2_5 <- RSS5 / (n5 - 2)   
+sigma2_5      
+
+# Varians    
+var5 <- sigma2_5 %*% XtX_inv5[2, 2]   
+var5      
+
+# Kesalahan Standar beta 1   
+SE5 <- sqrt(var5)   
+SE5     
+
+# Hitung nilai t-statistik   
+t_value5 <- qt(1 - 0.05/2, df = n5 - 2)   
+t_value5
+
+# Selang Kepercayaan 95% untuk beta 1   
+lowerCI5 <- beta_hat5[2,] - t_value5 * SE5   
+lowerCI5
+
+upperCI5 <- beta_hat5[2,] + t_value5 * SE5  
+upperCI5
+```
+
+Jadi, selang kepercayaan 95% untuk $\beta1$ adalah $(2.207, 2.764)$.
+
+### Soal 6: Efek Populasi Terhadap Tingkat Pengangguran
+
+Seorang ekonom ingin mengetahui pengaruh jumlah populasi (dalam ribuan) terhadap tingkat pengangguran (dalam persen) di beberapa kota. Data dari 6 kota adalah sebagai berikut:
+
+```{r}
+# Soal 
+x6 <- c(50, 75, 100, 125, 150, 175)
+y6 <- c(4.5, 5.0, 5.5, 6.0, 6.5, 7.0)
+n6 <- 6
+```
+
+a\. Tentukan estimasi untuk parameter $\beta_0$ dan $\beta_1$ menggunakan metode matriks
+
+```{r}
+X6 <- cbind(1, x6)    
+X6
+
+XtX6 <- t(X6) %*% X6    
+XtX6  
+
+XtX_inv6 <- solve(XtX6)    
+XtX_inv6
+
+XtY6 <- t(X6) %*% y6    
+XtY6
+
+beta_hat6 <- XtX_inv6 %*% XtY6   
+beta_hat6
+```
+
+Jadi, estimasi parameter regresi adalah $\beta_0 = 3.50$ dan $\beta_1=0.02$
+
+b\. Hitung selang kepercayaan 95% untuk Koefisien $\beta_1$
+
+Untuk menghitung selang kepercayaan untuk $\beta_1$, kita perlu menghitung varians estimator $\hat\beta$ dan kesalahan standar (standard error) dari $\hat\beta_1$
+
+```{r}
+Yhat6 <- X6 %*% beta_hat6    
+Yhat6
+
+# Residual Sum of Squares (RSS)    
+RSS6 <- sum((y6 - Yhat6)^2)    
+RSS6
+
+# Estimasi Varians     
+sigma2_6 <- RSS6 / (n6 - 2)    
+sigma2_6
+
+# Varians     
+var6 <- sigma2_6 %*% XtX_inv6[2, 2]    
+var6        
+
+# Kesalahan Standar beta 1    
+SE6 <- sqrt(var6)    
+SE6
+
+# Hitung nilai t-statistik    
+t_value6 <- qt(1 - 0.05/2, df = n6 - 2)    
+t_value6
+
+# Selang Kepercayaan 95% untuk beta 1    
+lowerCI6 <- beta_hat6[2,] - t_value6 * SE6
+lowerCI6
+
+upperCI6 <- beta_hat6[2,] + t_value6 * SE6   
+upperCI6
+```
+
+Jadi, selang kepercayaan 95% untuk $\beta1$ adalah $(0.02, 0.02)$.
+
+### Soal 7: Pengaruh Harga Rumah terhadap Luas Tanah
+
+Seorang agen real estate ingin mengetahui hubungan antara harga rumah (dalam ribuan dollar) dan luas tanah (dalam meter persegi). Data dari 5 rumah adalah sebagai berikut:
+
+```{r}
+# Soal
+x7 <- c(200, 250, 300, 350, 400)
+y7 <- c(150, 175, 200, 225, 250)
+n7 <- 5
+```
+
+a\. Tentukan estimasi untuk parameter $\beta_0$ dan $\beta_1$ menggunakan metode matriks
+
+```{r}
+X7 <- cbind(1, x7)    
+X7
+
+XtX7 <- t(X7) %*% X7    
+XtX7  
+
+XtX_inv7 <- solve(XtX7)    
+XtX_inv7
+
+XtY7 <- t(X7) %*% y7  
+XtY7
+
+beta_hat7 <- XtX_inv7 %*% XtY7   
+beta_hat7
+```
+
+Jadi, estimasi parameter regresi adalah $\beta_0 = 50$ dan $\beta_1=0.5$
+
+b\. Hitung selang kepercayaan 95% untuk Koefisien $\beta_1$
+
+Untuk menghitung selang kepercayaan untuk $\beta_1$, kita perlu menghitung varians estimator $\hat\beta$ dan kesalahan standar (standard error) dari $\hat\beta_1$
+
+```{r}
+Yhat7 <- X7 %*% beta_hat7    
+Yhat7
+
+# Residual Sum of Squares (RSS)    
+RSS7 <- sum((y7 - Yhat7)^2)    
+RSS7
+
+# Estimasi Varians     
+sigma2_7 <- RSS7 / (n7 - 2)    
+sigma2_7
+
+# Varians     
+var7 <- sigma2_7 %*% XtX_inv7[2, 2]    
+var7        
+
+# Kesalahan Standar beta 1    
+SE7 <- sqrt(var7)    
+SE7
+
+# Hitung nilai t-statistik    
+t_value7 <- qt(1 - 0.05/2, df = n7 - 2)    
+t_value7
+
+# Selang Kepercayaan 95% untuk beta 1    
+lowerCI7 <- beta_hat7[2,] - t_value7 * SE7
+lowerCI7
+
+upperCI7 <- beta_hat7[2,] + t_value7 * SE7   
+upperCI7
+```
+
+Jadi, selang kepercayaan 95% untuk $\beta1$ adalah $(0.5,0.5)$.
+
+### Soal 8: Hubungan antara Jam Belajar dan Nilai Ujian
+
+Seorang guru ingin mengetahui hubungan antar jumlah jam belajar siswa per minggu (X) dan nilai ujian akrir mereka (Y). Data dari 6 siswa adalah sebagai berikut:
+
+```{r}
+# Soal
+x8 <- c(5, 10, 15, 20, 25, 30)
+y8 <- c(60, 70, 75, 85, 90, 95)
+n8 <- 6
+```
+
+a\. Tentukan estimasi untuk parameter $\beta_0$ dan $\beta_1$ menggunakan metode matriks
+
+```{r}
+X8 <- cbind(1, x8)
+X8
+
+XtX8 <- t(X8) %*% X8
+XtX8
+
+XtX_inv8 <- solve(XtX8)
+XtX_inv8  
+
+XtY8 <- t(X8) %*% y8   
+XtY8
+
+beta_hat8 <- XtX_inv8 %*% XtY8
+beta_hat8
+```
+
+Jadi, estimasi parameter regresi adalah $\beta_0 = 54.67$ dan $\beta_1=1.4$
+
+b\. Hitung selang kepercayaan 95% untuk Koefisien $\beta_1$
+
+Untuk menghitung selang kepercayaan untuk $\beta_1$, kita perlu menghitung varians estimator $\hat\beta$ dan kesalahan standar (standard error) dari $\hat\beta_1$
+
+```{r}
+Yhat8 <- X8 %*% beta_hat8     
+Yhat8
+
+# Residual Sum of Squares (RSS)     
+RSS8 <- sum((y8 - Yhat8)^2)     
+RSS8
+
+# Estimasi Varians      
+sigma2_8 <- RSS8 / (n8 - 2)     
+sigma2_8
+
+# Varians      
+var8 <- sigma2_8 %*% XtX_inv8[2, 2]   
+var8
+
+# Kesalahan Standar beta 1     
+SE8 <- sqrt(var8)     
+SE8 
+
+# Hitung nilai t-statistik     
+t_value8 <- qt(1 - 0.05/2, df = n8 - 2)
+t_value8
+
+# Selang Kepercayaan 95% untuk beta 1   
+lowerCI8 <- beta_hat8[2,] - t_value8 * SE8 
+lowerCI8
+
+upperCI8 <- beta_hat8[2,] + t_value8 * SE8    
+upperCI8
+```
+
+Jadi, selang kepercayaan 95% untuk $\beta1$ adalah $(1.157, 1.642)$.
+
+### Soal 9: Pengaruh Ukuran Perusahaan terhadap Keuntungan
+
+Seorang analisis bisnis ingin mengkaji pengaruh ukuran perusahaan (dalam jumlah karyawan) terhadap keuntungan tahunan (dalam juta dollar). Data dari 5 perusahaan adalah sebagai berikut:
+
+```{r}
+# Soal
+x9 <- c(50, 100, 150, 200, 250)
+y9 <- c(1.5, 2.0, 2.5, 3.0, 3.5)
+n9 <- 5
+```
+
+a\. Tentukan estimasi untuk parameter $\beta_0$ dan $\beta_1$ menggunakan metode matriks
+
+```{r}
+X9 <- cbind(1, x9)
+X9
+
+XtX9 <- t(X9) %*% X9
+XtX9
+
+XtX_inv9 <- solve(XtX9)
+XtX_inv9  
+
+XtY9 <- t(X9) %*% y9   
+XtY9
+
+beta_hat9 <- XtX_inv9 %*% XtY9
+beta_hat9
+```
+
+Jadi, estimasi parameter regresi adalah $\beta_0 = 1$ dan $\beta_1=0.01$
+
+b\. Hitung selang kepercayaan 95% untuk Koefisien $\beta_1$
+
+Untuk menghitung selang kepercayaan untuk $\beta_1$, kita perlu menghitung varians estimator $\hat\beta$ dan kesalahan standar (standard error) dari $\hat\beta_1$
+
+```{r}
+Yhat9 <- X9 %*% beta_hat9     
+Yhat9
+
+# Residual Sum of Squares (RSS)     
+RSS9 <- sum((y9 - Yhat9)^2)     
+RSS9
+
+# Estimasi Varians      
+sigma2_9 <- RSS9 / (n9 - 2)     
+sigma2_9
+
+# Varians      
+var9 <- sigma2_9 %*% XtX_inv9[2, 2]   
+var9
+
+# Kesalahan Standar beta 1     
+SE9 <- sqrt(var9)     
+SE9 
+
+# Hitung nilai t-statistik     
+t_value9 <- qt(1 - 0.05/2, df = n9 - 2)
+t_value9
+
+# Selang Kepercayaan 95% untuk beta 1   
+lowerCI9 <- beta_hat9[2,] - t_value9 * SE9 
+lowerCI9
+
+upperCI9 <- beta_hat9[2,] + t_value9 * SE9    
+upperCI9
+```
+
+Jadi, selang kepercayaan 95% untuk $\beta1$ adalah $(0.01, 0.01)$.
+
+### Soal 10: Hubungan antara Belanja Pemerintah dan Pertumbuhan Ekonomi
+
+Seorang ekonom ingin mempelajari hubungan antara belanja pemerintah (dalam miliaran dollar) dan pertumbuhan ekonomi tahunan (dalam persen). Data dari 6 tahun adalah sebagai berikut:
+
+```{r}
+# Soal
+x10 <- c(100, 150, 200, 250, 300, 350)
+y10 <- c(2.0, 2.5, 3.0, 3.5, 4.0, 4.5)
+n10 <- 6
+```
+
+a\. Tentukan estimasi untuk parameter $\beta_0$ dan $\beta_1$ menggunakan metode matriks
+
+```{r}
+X10 <- cbind(1, x10)
+X10
+
+XtX10 <- t(X10) %*% X10
+XtX10
+
+XtX_inv10 <- solve(XtX10)
+XtX_inv10 
+
+XtY10 <- t(X10) %*% y10   
+XtY10
+
+beta_hat10 <- XtX_inv10 %*% XtY10
+beta_hat10
+```
+
+Jadi, estimasi parameter regresi adalah $\beta_0 = 1$ dan $\beta_1=0.01$
+
+b\. Hitung selang kepercayaan 95% untuk Koefisien $\beta_1$
+
+Untuk menghitung selang kepercayaan untuk $\beta_1$, kita perlu menghitung varians estimator $\hat\beta$ dan kesalahan standar (standard error) dari $\hat\beta_1$
+
+```{r}
+Yhat10 <- X10 %*% beta_hat10     
+Yhat10
+
+# Residual Sum of Squares (RSS)     
+RSS10 <- sum((y10 - Yhat10)^2)     
+RSS10
+
+# Estimasi Varians      
+sigma2_10 <- RSS10 / (n10 - 2)     
+sigma2_10
+
+# Varians      
+var10 <- sigma2_10 %*% XtX_inv10[2, 2]   
+var10
+
+# Kesalahan Standar beta 1     
+SE10 <- sqrt(var10)     
+SE10
+
+# Hitung nilai t-statistik     
+t_value10 <- qt(1 - 0.05/2, df = n10 - 2)
+t_value10
+
+# Selang Kepercayaan 95% untuk beta 1   
+lowerCI10 <- beta_hat10[2,] - t_value10 * SE10
+lowerCI10
+
+upperCI10 <- beta_hat10[2,] + t_value10 * SE10
+upperCI10
+```
+
+Jadi, selang kepercayaan 95% untuk $\beta1$ adalah $(0.01, 0.01)$.
