@@ -1,0 +1,524 @@
+---
+title: 'Prak PML #4'
+author: "Meriza Immanuela Virgie"
+date: "2024-09-02"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# MODEL BERPANGKAT PENUH
+
+```{r}
+library(MASS)
+```
+
+## Soal 1
+Misalkan $x$ menunjukkan jumlah jam belajar per minggu dan $y$ menunjukkan nilai ujian seorang siswa. Asumsikan regresi linear sederhana berlaku dan pertimbangkan data berikut:
+
+Jam Belajar (x): 4,6,8,10,12,14
+Nilai Ujian (y): 55,60,65,70,80,90
+
+### a.) Temukan $y$ dan $X$
+```{r}
+y.1 <- c(55,60,65,70,80,90)
+x.1 <- cbind(1,c(4,6,8,10,12,14))
+
+y.1 <- as.matrix(y.1)
+y.1; x.1
+```
+
+b.) Temukan $X^TX$, $X^Ty$, dan $(X^TX)^{-1}$
+```{r}
+XtX.1 <- t(x.1) %*% x.1
+Xty.1 <- t(x.1) %*% y.1
+XtX.1inv <- solve(XtX.1)
+
+XtX.1
+Xty.1
+XtX.1inv
+```
+
+c.) Temukan estimasi kuadrat terkecil untuk $\beta_0$ dan $\beta_1$ dengan menghitung $(X^TX)^{-1}X^Ty$
+```{r}
+nilai.beta_1 <- XtX.1inv %*% Xty.1
+nilai.beta_1
+```
+Nilai $\beta_0$ adalah 39.142857 dan $\beta_1$ adalah 3.428571
+
+d.) Verifikasi perhitungan Anda di bagian c dengan menemukan $\beta_0$ dan $\beta_1$ menggunakan rumus
+```{r}
+sum_x.1 <- sum(x.1[,2])
+sum_y.1 <- sum(y.1)
+sum_x2.1 <- sum(x.1[,2]^2)
+sum_xy.1 <- sum(x.1[,2]*y.1)
+n.1 <- length(y.1)
+
+
+b0.1 <- (sum_x2.1 * sum_y.1 - sum_x.1 * sum_xy.1) / (n.1 * sum_x2.1 - sum_x.1^2)
+b0.1
+
+b1.1 <- (n.1 * sum_xy.1 - sum_x.1 * sum_y.1) / (n.1 * sum_x2.1 - sum_x.1^2)
+b1.1
+```
+Sehingga didapatkan model linearnya adalah: $$y=39.14286+3.428571x_1+\epsilon$$
+
+## Soal 2
+Misalkan $x$ menunjukkan jumlah hari olahraga dalam sebulan dan $y$ menunjukkan berat badan seseorang dalam kg. Asumsikan regresi linear sederhana berlaku dan pertimbangkan data berikut:
+
+Hari Olahraga (x): 5,10,15,20,25,30
+Berat Badan (y): 75,72,70,68,66,65
+
+### a.) Temukan $y$ dan $X$
+```{r}
+y.2 <- c(75,72,70,68,66,65)
+x.2 <- cbind(1,c(5,10,15,20,25,30))
+
+y.2 <- as.matrix(y.2)
+y.2; x.2
+```
+
+b.) Temukan $X^TX$, $X^Ty$, dan $(X^TX)^{-1}$
+```{r}
+XtX.2 <- t(x.2) %*% x.2
+Xty.2 <- t(x.2) %*% y.2
+XtX.2inv <- solve(XtX.2)
+
+XtX.2
+Xty.2
+XtX.2inv
+```
+
+c.) Temukan estimasi kuadrat terkecil untuk $\beta_0$ dan $\beta_1$ dengan menghitung $(X^TX)^{-1}X^Ty$
+```{r}
+nilai.beta_2 <- XtX.2inv %*% Xty.2
+nilai.beta_2
+```
+Nilai $\beta_0$ adalah 76.33333 dan $\beta_1$ adalah -0.4
+
+d.) Verifikasi perhitungan Anda di bagian c dengan menemukan $\beta_0$ dan $\beta_1$ menggunakan rumus
+```{r}
+sum_x.2 <- sum(x.2[,2])
+sum_y.2 <- sum(y.2)
+sum_x2.2 <- sum(x.2[,2]^2)
+sum_xy.2 <- sum(x.2[,2]*y.2)
+n.2 <- length(y.2)
+
+
+b0.2 <- (sum_x2.2 * sum_y.2 - sum_x.2 * sum_xy.2) / (n.2 * sum_x2.2 - sum_x.2^2)
+b0.2
+
+b1.2 <- (n.2 * sum_xy.2 - sum_x.2 * sum_y.2) / (n.2 * sum_x2.2 - sum_x.2^2)
+b1.2
+```
+Sehingga didapatkan model linearnya adalah: $$y=76.33333-0.4x_1+\epsilon$$
+
+## Soal 3
+Misalkan $x$ menunjukkan jumlah pengunjung sebuah toko per hari dan $y$ menunjukkan pendapatan harian toko tersebut. Asumsikan regresi linear sederhana berlaku dan pertimbangkan data berikut:
+
+Pengungjung (x): 50,100,150,200,250,300
+Pendapatan (y): 300,450,600,750,900,1100
+
+### a.) Temukan $y$ dan $X$
+```{r}
+y.3 <- c(300,450,600,750,900,1100)
+x.3 <- cbind(1,c(50,100,150,200,250,300))
+
+y.3 <- as.matrix(y.3)
+y.3; x.3
+```
+
+b.) Temukan $X^TX$, $X^Ty$, dan $(X^TX)^{-1}$
+```{r}
+XtX.3 <- t(x.3) %*% x.3
+Xty.3 <- t(x.3) %*% y.3
+XtX.3inv <- solve(XtX.3)
+
+XtX.3
+Xty.3
+XtX.3inv
+```
+
+c.) Temukan estimasi kuadrat terkecil untuk $\beta_0$ dan $\beta_1$ dengan menghitung $(X^TX)^{-1}X^Ty$
+```{r}
+nilai.beta_3 <- XtX.3inv %*% Xty.3
+nilai.beta_3
+```
+Nilai $\beta_0$ adalah 133.333333 dan $\beta_1$ adalah 3.142857
+
+d.) Verifikasi perhitungan Anda di bagian c dengan menemukan $\beta_0$ dan $\beta_1$ menggunakan rumus
+```{r}
+sum_x.3 <- sum(x.3[,2])
+sum_y.3 <- sum(y.3)
+sum_x2.3 <- sum(x.3[,2]^2)
+sum_xy.3 <- sum(x.3[,2]*y.3)
+n.3 <- length(y.3)
+
+
+b0.3 <- (sum_x2.3 * sum_y.3 - sum_x.3 * sum_xy.3) / (n.3 * sum_x2.3 - sum_x.3^2)
+b0.3
+
+b1.3 <- (n.3 * sum_xy.3 - sum_x.3 * sum_y.3) / (n.3 * sum_x2.3 - sum_x.3^2)
+b1.3
+```
+Sehingga didapatkan model linearnya adalah: $$y=133.3333+3.142857x_1+\epsilon$$
+
+
+## Soal 4
+Misalkan $x$ menunjukkan jumlah jam tidur per malam dan $y$ menunjukkan produktivitas kerja seseorang dalam skala 1-10. Asumsikan regresi linear sederhana berlaku dan pertimbangkan data berikut:
+
+Jam Tidur (x): 4,5,6,7,8,9
+Produktivitas (y): 5,6,7,8,9,10
+
+### a.) Temukan $y$ dan $X$
+```{r}
+y.4 <- c(5,6,7,8,9,10)
+x.4 <- cbind(1,c(4,5,6,7,8,9))
+
+y.4 <- as.matrix(y.4)
+y.4; x.4
+```
+
+b.) Temukan $X^TX$, $X^Ty$, dan $(X^TX)^{-1}$
+```{r}
+XtX.4 <- t(x.4) %*% x.4
+Xty.4 <- t(x.4) %*% y.4
+XtX.4inv <- solve(XtX.4)
+
+XtX.4
+Xty.4
+XtX.4inv
+```
+
+c.) Temukan estimasi kuadrat terkecil untuk $\beta_0$ dan $\beta_1$ dengan menghitung $(X^TX)^{-1}X^Ty$
+```{r}
+nilai.beta_4 <- XtX.4inv %*% Xty.4
+nilai.beta_4
+```
+Nilai $\beta_0$ adalah 1 dan $\beta_1$ adalah 1
+
+d.) Verifikasi perhitungan Anda di bagian c dengan menemukan $\beta_0$ dan $\beta_1$ menggunakan rumus
+```{r}
+sum_x.4 <- sum(x.4[,2])
+sum_y.4 <- sum(y.4)
+sum_x2.4 <- sum(x.4[,2]^2)
+sum_xy.4 <- sum(x.4[,2]*y.4)
+n.4 <- length(y.4)
+
+
+b0.4 <- (sum_x2.4 * sum_y.4 - sum_x.4 * sum_xy.4) / (n.4 * sum_x2.4 - sum_x.4^2)
+b0.4
+
+b1.4 <- (n.4 * sum_xy.4 - sum_x.4 * sum_y.4) / (n.4 * sum_x2.4 - sum_x.4^2)
+b1.4
+```
+Sehingga didapatkan model linearnya adalah: $$y=1+x_1+\epsilon$$
+
+## Soal 5
+Misalkan $x$ menunjukkan jumlah makanan cepat saji yang dikonsumsi per minggu dan $y$ menunjukkan kadar kolesterol dalam darah. Asumsikan regresi linear sederhana berlaku dan pertimbangkan data berikut:
+
+Makanan Cepat Saji (x): 1,2,3,4,5,6
+Kolesterol (y): 190,200,210,220,230,240
+
+### a.) Temukan $y$ dan $X$
+```{r}
+y.5 <- c(190,200,210,220,230,240)
+x.5 <- cbind(1,c(1,2,3,4,5,6))
+
+y.5 <- as.matrix(y.5)
+y.5; x.5
+```
+
+b.) Temukan $X^TX$, $X^Ty$, dan $(X^TX)^{-1}$
+```{r}
+XtX.5 <- t(x.5) %*% x.5
+Xty.5 <- t(x.5) %*% y.5
+XtX.5inv <- solve(XtX.5)
+
+XtX.5
+Xty.5
+XtX.5inv
+```
+
+c.) Temukan estimasi kuadrat terkecil untuk $\beta_0$ dan $\beta_1$ dengan menghitung $(X^TX)^{-1}X^Ty$
+```{r}
+nilai.beta_5 <- XtX.5inv %*% Xty.5
+nilai.beta_5
+```
+Nilai $\beta_0$ adalah 180 dan $\beta_1$ adalah 10
+
+d.) Verifikasi perhitungan Anda di bagian c dengan menemukan $\beta_0$ dan $\beta_1$ menggunakan rumus
+```{r}
+sum_x.5 <- sum(x.5[,2])
+sum_y.5 <- sum(y.5)
+sum_x2.5 <- sum(x.5[,2]^2)
+sum_xy.5 <- sum(x.5[,2]*y.5)
+n.5 <- length(y.5)
+
+
+b0.5 <- (sum_x2.5 * sum_y.5 - sum_x.5 * sum_xy.5) / (n.5 * sum_x2.5 - sum_x.5^2)
+b0.5
+
+b1.5 <- (n.5 * sum_xy.5 - sum_x.5 * sum_y.5) / (n.5 * sum_x2.5 - sum_x.5^2)
+b1.5
+```
+Sehingga didapatkan model linearnya adalah: $$y=180+10x_1+\epsilon$$
+
+## Soal 6
+Misalkan $x$ menunjukkan jumlah postingan media sosial dalam sehari dan $y$ menunjukkanjumlah likes yang diterima. Asumsikan regresi linear sederhana berlaku dan pertimbangkan data berikut:
+
+Postingan (x): 1,2,3,4,5,6
+Likes (y): 50,100,150,200,250,300
+
+### a.) Temukan $y$ dan $X$
+```{r}
+y.6 <- c(50,100,150,200,250,300)
+x.6 <- cbind(1,c(1,2,3,4,5,6))
+
+y.6 <- as.matrix(y.6)
+y.6; x.6
+```
+
+b.) Temukan $X^TX$, $X^Ty$, dan $(X^TX)^{-1}$
+```{r}
+XtX.6 <- t(x.6) %*% x.6
+Xty.6 <- t(x.6) %*% y.6
+XtX.6inv <- solve(XtX.6)
+
+XtX.6
+Xty.6
+XtX.6inv
+```
+
+c.) Temukan estimasi kuadrat terkecil untuk $\beta_0$ dan $\beta_1$ dengan menghitung $(X^TX)^{-1}X^Ty$
+```{r}
+nilai.beta_6 <- XtX.6inv %*% Xty.6
+nilai.beta_6
+```
+Nilai $\beta_0$ adalah $-1.136868×10^{13}$ dan $\beta_1$ adalah 50
+
+d.) Verifikasi perhitungan Anda di bagian c dengan menemukan $\beta_0$ dan $\beta_1$ menggunakan rumus
+```{r}
+sum_x.6 <- sum(x.6[,2])
+sum_y.6 <- sum(y.6)
+sum_x2.6 <- sum(x.6[,2]^2)
+sum_xy.6 <- sum(x.6[,2]*y.6)
+n.6 <- length(y.6)
+
+
+b0.6 <- (sum_x2.6 * sum_y.6 - sum_x.6 * sum_xy.6) / (n.6 * sum_x2.6 - sum_x.6^2)
+b0.6
+
+b1.6 <- (n.6 * sum_xy.6 - sum_x.6 * sum_y.6) / (n.6 * sum_x2.6 - sum_x.6^2)
+b1.6
+```
+Sehingga didapatkan model linearnya adalah: $$y=0+50x_1+\epsilon=50x_1+\epsilon$$
+
+
+## Soal 7
+Misalkan $x$ menunjukkan kopi yang dimininum per hari dan $y$ menunjukkan tingkat stress seseorang. Asumsikan regresi linear sederhana berlaku dan pertimbangkan data berikut:
+
+Kopi (x): 1,2,3,4,5,6
+Tingkat Stress (y): 30,40,50,60,70,80
+
+### a.) Temukan $y$ dan $X$
+```{r}
+y.7 <- c(30,40,50,60,70,80)
+x.7 <- cbind(1,c(1,2,3,4,5,6))
+
+y.7 <- as.matrix(y.7)
+y.7; x.7
+```
+
+b.) Temukan $X^TX$, $X^Ty$, dan $(X^TX)^{-1}$
+```{r}
+XtX.7 <- t(x.7) %*% x.7
+Xty.7 <- t(x.7) %*% y.7
+XtX.7inv <- solve(XtX.7)
+
+XtX.7
+Xty.7
+XtX.7inv
+```
+
+c.) Temukan estimasi kuadrat terkecil untuk $\beta_0$ dan $\beta_1$ dengan menghitung $(X^TX)^{-1}X^Ty$
+```{r}
+nilai.beta_7 <- XtX.7inv %*% Xty.7
+nilai.beta_7
+```
+Nilai $\beta_0$ adalah 20 dan $\beta_1$ adalah 10
+
+d.) Verifikasi perhitungan Anda di bagian c dengan menemukan $\beta_0$ dan $\beta_1$ menggunakan rumus
+```{r}
+sum_x.7 <- sum(x.7[,2])
+sum_y.7 <- sum(y.7)
+sum_x2.7 <- sum(x.7[,2]^2)
+sum_xy.7 <- sum(x.7[,2]*y.7)
+n.7 <- length(y.7)
+
+
+b0.7 <- (sum_x2.7 * sum_y.7 - sum_x.7 * sum_xy.7) / (n.7 * sum_x2.7 - sum_x.7^2)
+b0.7
+
+b1.7 <- (n.7 * sum_xy.7 - sum_x.7 * sum_y.7) / (n.7 * sum_x2.7 - sum_x.7^2)
+b1.7
+```
+Sehingga didapatkan model linearnya adalah: $$y=20+10x_1+\epsilon$$
+
+
+## Soal 8
+Misalkan $x$ menunjukkan jumlah artikel yang dibaca per minggu dan $y$ menunjukkan jumlah kata yang ditulis dalam sebuah makalah. Asumsikan regresi linear sederhana berlaku dan pertimbangkan data berikut:
+
+Artikel (x): 2,4,6,8,10,12
+Kata (y): 500,1000,1500,2000,2500,3000
+
+### a.) Temukan $y$ dan $X$
+```{r}
+y.8 <- c(500,1000,1500,2000,2500,3000)
+x.8 <- cbind(1,c(2,4,6,8,10,12))
+
+y.8 <- as.matrix(y.8)
+y.8; x.8
+```
+
+b.) Temukan $X^TX$, $X^Ty$, dan $(X^TX)^{-1}$
+```{r}
+XtX.8 <- t(x.8) %*% x.8
+Xty.8 <- t(x.8) %*% y.8
+XtX.8inv <- solve(XtX.8)
+
+XtX.8
+Xty.8
+XtX.8inv
+```
+
+c.) Temukan estimasi kuadrat terkecil untuk $\beta_0$ dan $\beta_1$ dengan menghitung $(X^TX)^{-1}X^Ty$
+```{r}
+nilai.beta_8 <- XtX.8inv %*% Xty.8
+nilai.beta_8
+```
+Nilai $\beta_0$ adalah 0 dan $\beta_1$ adalah 250
+
+d.) Verifikasi perhitungan Anda di bagian c dengan menemukan $\beta_0$ dan $\beta_1$ menggunakan rumus
+```{r}
+sum_x.8 <- sum(x.8[,2])
+sum_y.8 <- sum(y.8)
+sum_x2.8 <- sum(x.8[,2]^2)
+sum_xy.8 <- sum(x.8[,2]*y.8)
+n.8 <- length(y.8)
+
+
+b0.8 <- (sum_x2.8 * sum_y.8 - sum_x.8 * sum_xy.8) / (n.8 * sum_x2.8 - sum_x.8^2)
+b0.8
+
+b1.8 <- (n.8 * sum_xy.8 - sum_x.8 * sum_y.8) / (n.8 * sum_x2.8 - sum_x.8^2)
+b1.8
+```
+Sehingga didapatkan model linearnya adalah: $$y=250x_1+\epsilon$$
+
+
+## Soal 9
+Misalkan $x$ menunjukkan jumlah jam latihan per minggu dan $y$ menunjukkan jumlah kalori yang dibakar per minggu. Asumsikan regresi linear sederhana berlaku dan pertimbangkan data berikut:
+
+Jam Latihan (x): 2,4,6,8,10,12
+Kalori dibakar (y): 500,1000,1500,2000,2500,3000
+
+### a.) Temukan $y$ dan $X$
+```{r}
+y.9 <- c(500,1000,1500,2000,2500,3000)
+x.9 <- cbind(1,c(2,4,6,8,10,12))
+
+y.9 <- as.matrix(y.9)
+y.9; x.9
+```
+
+b.) Temukan $X^TX$, $X^Ty$, dan $(X^TX)^{-1}$
+```{r}
+XtX.9 <- t(x.9) %*% x.9
+Xty.9 <- t(x.9) %*% y.9
+XtX.9inv <- solve(XtX.9)
+
+XtX.9
+Xty.9
+XtX.9inv
+```
+
+c.) Temukan estimasi kuadrat terkecil untuk $\beta_0$ dan $\beta_1$ dengan menghitung $(X^TX)^{-1}X^Ty$
+```{r}
+nilai.beta_9 <- XtX.9inv %*% Xty.9
+nilai.beta_9
+```
+Nilai $\beta_0$ adalah 180 dan $\beta_1$ adalah 10
+
+d.) Verifikasi perhitungan Anda di bagian c dengan menemukan $\beta_0$ dan $\beta_1$ menggunakan rumus
+```{r}
+sum_x.9 <- sum(x.9[,2])
+sum_y.9 <- sum(y.9)
+sum_x2.9 <- sum(x.9[,2]^2)
+sum_xy.9 <- sum(x.9[,2]*y.9)
+n.9 <- length(y.9)
+
+
+b0.9 <- (sum_x2.9 * sum_y.9 - sum_x.9 * sum_xy.9) / (n.9 * sum_x2.9 - sum_x.9^2)
+b0.9
+
+b1.9 <- (n.9 * sum_xy.9 - sum_x.9 * sum_y.9) / (n.9 * sum_x2.9 - sum_x.9^2)
+b1.9
+```
+Sehingga didapatkan model linearnya adalah: $$y=250x_1+\epsilon$$
+
+
+## Soal 10
+Misalkan $x$ menunjukkan jumlah jam menonton TV per hari dan $y$ menunjukkan jumlah waktu yang dihabiskan untuk berolahraga per hari. Asumsikan regresi linear sederhana berlaku dan pertimbangkan data berikut:
+
+Jam Menonton TV (x): 1,2,3,4,5,6
+Waktu Olahraga (y): 60,50,40,30,20,10
+
+### a.) Temukan $y$ dan $X$
+```{r}
+y.10 <- c(60,50,40,30,20,10)
+x.10 <- cbind(1,c(1,2,3,4,5,6))
+
+y.10 <- as.matrix(y.10)
+y.10; x.10
+```
+
+b.) Temukan $X^TX$, $X^Ty$, dan $(X^TX)^{-1}$
+```{r}
+XtX.10 <- t(x.10) %*% x.10
+Xty.10 <- t(x.10) %*% y.10
+XtX.10inv <- solve(XtX.10)
+
+XtX.10
+Xty.10
+XtX.10inv
+```
+
+c.) Temukan estimasi kuadrat terkecil untuk $\beta_0$ dan $\beta_1$ dengan menghitung $(X^TX)^{-1}X^Ty$
+```{r}
+nilai.beta_10 <- XtX.10inv %*% Xty.10
+nilai.beta_10
+```
+Nilai $\beta_0$ adalah 70 dan $\beta_1$ adalah -10
+
+d.) Verifikasi perhitungan Anda di bagian c dengan menemukan $\beta_0$ dan $\beta_1$ menggunakan rumus
+```{r}
+sum_x.10 <- sum(x.10[,2])
+sum_y.10 <- sum(y.10)
+sum_x2.10 <- sum(x.10[,2]^2)
+sum_xy.10 <- sum(x.10[,2]*y.10)
+n.10 <- length(y.10)
+
+
+b0.10 <- (sum_x2.10 * sum_y.10 - sum_x.10 * sum_xy.10) / (n.10 * sum_x2.10 - sum_x.10^2)
+b0.10
+
+b1.10 <- (n.10 * sum_xy.10 - sum_x.10 * sum_y.10) / (n.10 * sum_x2.10 - sum_x.10^2)
+b1.10
+```
+Sehingga didapatkan model linearnya adalah: $$y=70-10x_1+\epsilon$$
+
+
+
