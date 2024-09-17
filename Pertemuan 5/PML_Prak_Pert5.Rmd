@@ -1,0 +1,579 @@
+---
+title: "PML_Prak_Pert5"
+author: "Anindya Septyani G1401221074"
+date: "2024-09-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Penduga Model Berpangkat Penuh 1 
+
+## Soal 1
+
+```{r}
+# Input Data
+y1 <- c(7, 5, 8, 9)
+x1 <- c(4, 3, 6, 7)
+```
+
+```{r}
+# 1a
+X1 <- cbind(1, x1)
+X1
+
+XtX1 <- t(X1) %*% X1
+XtX1
+
+XtX_inv1 <- solve(XtX1)
+XtX_inv1
+
+XtY1 <- t(X1) %*% y1
+XtY1
+```
+
+```{r}
+# 1b
+beta_hat1 <- XtX_inv1 %*% XtY1
+beta_hat1
+```
+
+```{r}
+# 1c
+y_hat1 <- X1 %*% beta_hat1
+y_hat1
+
+e1 <- y1 - y_hat1
+e1
+
+sigma2_hat1 <- (t(e1) %*% e1) / (length(y1) - 2)
+sigma2_hat1
+```
+
+```{r}
+# 1d
+print(y_hat1)
+
+sigma2_hat1 <- sum(e1^2) / (length(y1) - 2)
+sigma2_hat1
+```
+
+## Soal 2
+
+```{r}
+# Input Data 
+y2 <- c(3, 4, 5, 6) 
+x2 <- c(2, 3, 4, 5)
+```
+
+```{r}
+# 2a
+X2 <- cbind(1, x2) 
+X2
+
+XtX2 <- t(X2) %*% X2 
+XtX2
+
+XtX_inv2 <- solve(XtX2) 
+XtX_inv2
+
+XtY2 <- t(X2) %*% y2 
+XtY2
+```
+
+```{r}
+# 2b 
+beta_hat2 <- XtX_inv2 %*% XtY2 
+beta_hat2
+```
+
+```{r}
+# 2c 
+y_hat2 <- X2 %*% beta_hat2 
+y_hat2 
+
+e2 <- y2 - y_hat2 
+e2
+
+sigma2_hat2 <- (t(e2) %*% e2) / (length(y2) - 2) 
+sigma2_hat2
+```
+
+```{r}
+# 2d 
+print(y_hat2) 
+
+sigma2_hat2 <- sum(e2^2) / (length(y2) - 2)
+sigma2_hat2
+```
+
+## Soal 3
+
+```{r}
+# Input Data  
+y3 <- c(10, 12, 14, 16)  
+x3 <- c(1, 2, 3, 4)
+```
+
+```{r}
+# 3a 
+X3 <- cbind(1, x3)  
+X3
+
+XtX3 <- t(X3) %*% X3
+XtX3
+
+XtX_inv3 <- solve(XtX3) 
+XtX_inv3
+
+XtY3 <- t(X3) %*% y3 
+XtY3
+```
+
+```{r}
+# 3b
+beta_hat3 <- XtX_inv3 %*% XtY3 
+beta_hat3
+```
+
+```{r}
+# 3c
+y_hat3 <- X3 %*% beta_hat3 
+y_hat3
+
+e3 <- y3 - y_hat3 
+e3
+
+sigma2_hat3 <- (t(e3) %*% e3) / (length(y3) - 2) 
+sigma2_hat3
+```
+
+```{r}
+# 3d
+print(y_hat3) 
+
+sigma2_hat3 <- sum(e3^2) / (length(y3) - 2)
+sigma2_hat3
+```
+
+## Soal 4
+
+```{r}
+# Input
+y4 <- c(2, 3, 5, 7)  
+x4 <- c(1, 2, 4, 6)
+```
+
+```{r}
+# 4a
+X4 <- cbind(1, x4)
+X4
+
+XtX4 <- t(X4) %*% X4
+XtX4
+
+XtX_inv4 <- solve(XtX4)
+XtX_inv4
+
+XtY4 <- t(X4) %*% y4
+XtY4
+```
+
+```{r}
+# 4b
+beta_hat4 <- XtX_inv4 %*% XtY4
+beta_hat4
+```
+
+```{r}
+# 4c
+y_hat4 <- X4 %*% beta_hat4 
+y_hat4
+
+e4 <- y4 - y_hat4 
+e4
+
+sigma2_hat4 <- (t(e4) %*% e4) / (length(y4) - 2) 
+sigma2_hat4
+```
+
+```{r}
+# 4d
+print(y_hat4) 
+
+sigma2_hat4 <- sum(e4^2) / (length(y4) - 2)
+sigma2_hat4
+```
+
+## Soal 5
+
+```{r}
+# Input Data
+y5 <- c(15, 10, 20, 25)
+x5 <- c(5, 3, 6, 8)
+```
+
+```{r}
+# 5a
+X5 <- cbind(1, x5)
+X5
+
+XtX5 <- t(X5) %*% X5
+XtX5
+
+XtX_inv5 <- solve(XtX5)
+XtX_inv5
+
+XtY5 <- t(X5) %*% y5
+XtY5
+```
+
+```{r}
+# 5b
+beta_hat5 <- XtX_inv5 %*% XtY5
+beta_hat5
+```
+
+```{r}
+# 5c
+y_hat5 <- X5 %*% beta_hat5 
+y_hat5
+
+e5 <- y5 - y_hat5 
+e5
+
+sigma2_hat5 <- (t(e5) %*% e5) / (length(y5) - 2) 
+sigma2_hat5
+```
+
+```{r}
+# 5d
+print(y_hat5) 
+
+sigma2_hat5 <- sum(e5^2) / (length(y5) - 2)
+sigma2_hat5
+```
+
+## Soal 6
+
+```{r}
+# Input
+y6 <- c(60, 65, 58, 62, 64)
+x6 <- c(2000, 2500, 1800, 2200, 2400)
+```
+
+```{r}
+# 6a
+X6 <- cbind(1, x6)
+X6
+```
+
+```{r}
+# 6b
+XtX6 <- t(X6) %*% X6
+XtX6
+
+XtX_inv6 <- solve(XtX6)
+XtX_inv6
+
+XtY6 <- t(X6) %*% y6
+XtY6
+```
+
+```{r}
+# 6c
+sum_X6 <- sum(X6[,2])
+sum_y6 <- sum(y6)
+sum_x2.6 <- sum(X6[,2]^2)
+sum_xy.6 <- sum(X6[,2] * y6)
+n6 <- length(y6)
+
+
+b0.6 <- (sum_x2.6 * sum_y6 - sum_X6 * sum_xy.6) / (n6 * sum_x2.6 - sum_X6^2)
+b0.6
+
+b1.6 <- (n6 * sum_xy.6 - sum_X6 * sum_y6) / (n6 * sum_x2.6 - sum_X6^2)
+b1.6
+
+beta_hat6 <- matrix(c(b0.6, b1.6), nrow = 2, ncol = 1)
+beta_hat6
+```
+
+```{r}
+# 6d
+print(b0.6)
+
+Y_hat6 <- X6 %*% beta_hat6
+Y_hat6
+
+e6 <- y6 - Y_hat6
+e6
+
+s2.6 <- (t(e6) %*% e6) / (length(y6) - length(beta_hat6))
+s2.6
+```
+
+```{r}
+# 6e
+var6 <- s2.6 / sum_x2.6
+var6
+```
+
+## Soal 7
+
+```{r}
+# Input
+y7 <- c(55, 60, 70, 75, 80)
+x7 <- c(1, 2, 3, 4, 5)
+```
+
+```{r}
+# 7a
+X7 <- cbind(1, x7)
+X7
+```
+
+```{r}
+# 7b
+XtX7 <- t(X7) %*% X7
+XtX7
+
+XtX_inv7 <- solve(XtX7)
+XtX_inv7
+
+XtY7 <- t(X7) %*% y7
+XtY7
+```
+
+```{r}
+# 7c
+sum_X7 <- sum(X7[,2])
+sum_y7 <- sum(y7)
+sum_x2.7 <- sum(X7[,2]^2)
+sum_xy.7 <- sum(X7[,2] * y7)
+n7 <- length(y7)
+
+
+b0.7 <- (sum_x2.7 * sum_y7 - sum_X7 * sum_xy.7) / (n7 * sum_x2.7 - sum_X7^2)
+b0.7
+
+b1.7 <- (n7 * sum_xy.7 - sum_X7 * sum_y7) / (n7 * sum_x2.7 - sum_X7^2)
+b1.7
+
+beta_hat7 <- matrix(c(b0.7, b1.7), nrow = 2, ncol = 1)
+beta_hat7
+```
+
+```{r}
+# 7d
+print(b0.7)
+
+Y_hat7 <- X7 %*% beta_hat7
+Y_hat7
+
+e7 <- y7 - Y_hat7
+e7
+
+s2.7 <- (t(e7) %*% e7) / (length(y7) - length(beta_hat7))
+s2.7
+```
+
+```{r}
+# 7e
+var7 <- s2.7 / sum_x2.7
+var7
+```
+
+## Soal 8
+
+```{r}
+# Input 
+y8 <- c(1, 2, 3, 4, 5)
+x8 <- c(20, 30, 40, 50, 60)
+```
+
+```{r}
+# 8a
+X8 <- cbind(1, x8)
+X8
+```
+
+```{r}
+# 8b
+XtX8 <- t(X8) %*% X8
+XtX8
+
+XtX_inv8 <- solve(XtX8)
+XtX_inv8
+
+XtY8 <- t(X8) %*% y8
+XtY8
+```
+
+```{r}
+# 8c
+sum_X8 <- sum(X8[,2])
+sum_y8 <- sum(y8)
+sum_x2.8 <- sum(X8[,2]^2)
+sum_xy.8 <- sum(X8[,2] * y8)
+n8 <- length(y8)
+
+b0.8 <- (sum_x2.8 * sum_y8 - sum_X8 * sum_xy.8) / (n8 * sum_x2.8 - sum_X8^2)
+b0.8
+
+b1.8 <- (n8 * sum_xy.8 - sum_X8 * sum_y8) / (n8 * sum_x2.8 - sum_X8^2)
+b1.8
+
+beta_hat8 <- matrix(c(b0.8, b1.8), nrow = 2, ncol = 1)
+beta_hat8
+```
+
+```{r}
+# 8d
+print(b0.8)
+
+Y_hat8 <- X8 %*% beta_hat8
+Y_hat8
+
+e8 <- y8 - Y_hat8
+e8
+
+s2.8 <- (t(e8) %*% e8) / (length(y8) - length(beta_hat8))
+s2.8
+```
+
+```{r}
+# 8e
+var8 <- s2.8 / sum_x2.8
+var8
+```
+
+## Soal 9
+
+```{r}
+# Input
+y9 <- c(0.5, 1, 1.5, 2, 2.5)
+x9 <- c(100, 200, 300, 400, 500)
+```
+
+```{r}
+# 9a
+X9 <- cbind(1, x9)
+X9
+```
+
+```{r}
+# 9b
+XtX9 <- t(X9) %*% X9
+XtX9
+
+XtX_inv9 <- solve(XtX9)
+XtX_inv9
+
+XtY9 <- t(X9) %*% y9
+XtY9
+```
+
+```{r}
+# 9c
+sum_X9 <- sum(X9[,2])
+sum_y9 <- sum(y9)
+sum_x2.9 <- sum(X9[,2]^2)
+sum_xy.9 <- sum(X9[,2] * y9)
+n9 <- length(y9)
+
+b0.9 <- (sum_x2.9 * sum_y9 - sum_X9 * sum_xy.9) / (n9 * sum_x2.9 - sum_X9^2)
+b0.9
+
+b1.9 <- (n9 * sum_xy.9 - sum_X9 * sum_y9) / (n9 * sum_x2.9 - sum_X9^2)
+b1.9
+
+beta_hat9 <- matrix(c(b0.9, b1.9), nrow = 2, ncol = 1)
+beta_hat9
+```
+
+```{r}
+# 9d
+print(b0.9)
+
+Y_hat9 <- X9 %*% beta_hat9
+Y_hat9
+
+e9 <- y9 - Y_hat9
+e9
+
+s2.9 <- (t(e9) %*% e9) / (length(y9) - length(beta_hat9))
+s2.9
+```
+
+```{r}
+# 9e
+var9 <- s2.9 / sum_x2.9
+var9
+```
+
+## Soal 10
+
+```{r}
+# Input
+y10 <- c(3, 5, 7, 9, 11)
+x10 <- c(1, 2, 3, 4, 5)
+```
+
+```{r}
+# 10a
+X10 <- cbind(1, x10)
+X10
+```
+
+```{r}
+# 10b
+XtX10 <- t(X10) %*% X10
+XtX10
+
+XtX_inv10 <- solve(XtX10)
+XtX_inv10
+
+XtY10 <- t(X10) %*% y10
+XtY10
+```
+
+```{r}
+# 10c
+sum_X10 <- sum(X10[,2])
+sum_y10 <- sum(y10)
+sum_x2.10 <- sum(X10[,2]^2)
+sum_xy.10 <- sum(X10[,2] * y10)
+n10 <- length(y10)
+
+b0.10 <- (sum_x2.10 * sum_y10 - sum_X10 * sum_xy.10) / (n10 * sum_x2.10 - sum_X10^2)
+b0.10
+
+b1.10 <- (n10 * sum_xy.10 - sum_X10 * sum_y10) / (n10 * sum_x2.10 - sum_X10^2)
+b1.10
+
+beta_hat10 <- matrix(c(b0.10, b1.10), nrow = 2, ncol = 1)
+beta_hat10
+```
+
+```{r}
+# 10d
+print(b0.10)
+
+Y_hat10 <- X10 %*% beta_hat10
+Y_hat10
+
+e10 <- y10 - Y_hat10
+e10
+
+s2.10 <- (t(e10) %*% e10) / (length(y10) - length(beta_hat10))
+s2.10
+```
+
+```{r}
+# 10e
+var10 <- s2.10 / sum_x2.10
+var10
+```
