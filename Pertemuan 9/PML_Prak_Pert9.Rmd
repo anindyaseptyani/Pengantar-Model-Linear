@@ -1,0 +1,1259 @@
+---
+title: "PML_Prak_Pert9"
+author: "Anindya Septyani G1401221074"
+date: "2024-11-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Pendugaan Model Tidak Berpangkat Penuh Part 2
+
+# Latihan Soal
+
+## Soal 1
+
+```{r}
+# Input Data
+X1 <- matrix(c(1,2,0,
+               1,2,0,
+               1,0,2,
+               1,0,2), 
+      nrow = 4, byrow = TRUE)
+X1
+
+XtY1 <- matrix(c(6,4,3),
+               nrow=3,byrow=TRUE)
+XtY1
+```
+
+```{r}
+#1
+XtX1 <- t(X1) %*% X1
+XtX1
+
+det1 <- det(XtX1)
+det1
+```
+
+Singular
+
+```{r}
+#2
+rank1 <- qr(XtX1)$rank
+rank1
+```
+
+Terbukti
+
+```{r}
+#3
+library(MASS)
+XtX_inv1 <- ginv(XtX1)
+
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal
+beta_hat1_1 <- XtX_inv1 %*% XtY1
+beta_hat1_1
+```
+
+Sistem persamaan normal konsisten
+
+```{r}
+#4
+#Input Data
+M1_1 <- matrix(c(3,0,
+               0,3),
+      nrow=2, byrow=TRUE)
+M1_1
+
+#Determinan
+DetM1_1 <- det(M1_1)
+DetM1_1
+
+#Invers
+M1_1_inv <- solve(M1_1)
+M1_1_inv
+
+#Transpose Invers
+tM1_1_inv <- t(M1_1_inv)
+tM1_1_inv
+
+#Invers Conditional
+M1_1_cond_inv <- matrix(0, nrow=3, ncol=3)
+M1_1_cond_inv[2:3,2:3] <- M1_1_inv
+M1_1_cond_inv
+```
+
+```{r}
+#5
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal
+beta_hat2_1 <- XtX_inv1 %*% XtY1
+beta_hat2_1
+```
+
+```{r}
+#6
+# Menggunakan SVD untuk menemukan null space dari XtX
+svd_result1 <- svd(XtX1)
+null_space1 <- svd_result1$v[, which(svd_result1$d < 1e-10)]
+
+# Solusi kedua dengan menambahkan null space ke solusi least squares
+beta_hat2_1 <- beta_hat1_1 + null_space1
+beta_hat3_1 <- beta_hat1_1 - null_space1
+
+# Tampilkan solusi alternatif
+print(beta_hat2_1)
+print(beta_hat3_1)
+```
+
+```{r}
+#7
+#Input Data
+M2_1 <- matrix(c(5,3,
+                 3,3),
+      nrow=2, byrow=TRUE)
+M2_1
+
+#Determinan
+DetM2_1 <- det(M2_1)
+DetM2_1
+
+#Invers
+M2_1_inv <- solve(M2_1)
+M2_1_inv
+
+#Transpose Invers
+tM2_1_inv <- t(M2_1_inv)
+tM2_1_inv
+
+#Invers Conditional
+M2_1_cond_inv <- matrix(0, nrow=3, ncol=3)
+M2_1_cond_inv[2:3,2:3] <- M2_1_inv
+M2_1_cond_inv
+```
+
+```{r}
+#8
+beta_hat4_1 <- M2_1_cond_inv %*% XtY1
+beta_hat4_1
+```
+
+## Soal 2
+
+```{r}
+# Input Data 
+X2 <- matrix(c(1,3,1,
+               1,3,1,
+               1,0,2,
+               1,0,2), 
+      nrow = 4, byrow = TRUE)
+X2
+
+XtY2 <- matrix(c(7,5,4),
+               nrow=3,byrow=TRUE)
+XtY2
+```
+
+```{r}
+#1
+XtX2 <- t(X2) %*% X2
+XtX2
+
+det2 <- det(XtX2)
+det2
+```
+
+Singular
+
+```{r}
+#2
+rank2 <- qr(XtX2)$rank
+rank2
+```
+
+Terbukti
+
+```{r}
+#3
+library(MASS)
+XtX_inv2 <- ginv(XtX2)
+
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal
+beta_hat1_2 <- XtX_inv2 %*% XtY2
+beta_hat1_2
+```
+
+```{r}
+#4
+#Input Data
+M1_2 <- matrix(c(3,0,
+                 0,3),
+      nrow=2, byrow=TRUE)
+M1_2
+
+#Determinan
+DetM1_2 <- det(M1_2)
+DetM1_2
+
+#Invers
+M1_2_inv <- solve(M1_2)
+M1_2_inv
+
+#Transpose Invers
+tM1_2_inv <- t(M1_2_inv)
+tM1_2_inv
+
+#Invers Conditional
+M1_2_cond_inv <- matrix(0, nrow=3, ncol=3)
+M1_2_cond_inv[2:3,2:3] <- M1_2_inv
+M1_2_cond_inv
+```
+
+```{r}
+#5
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal
+beta_hat2_2 <- XtX_inv2 %*% XtY2
+beta_hat2_2
+```
+
+```{r}
+#6
+# Menggunakan SVD untuk menemukan null space dari XtX
+svd_result2 <- svd(XtX2)
+null_space2 <- svd_result2$v[, which(svd_result2$d < 1e-10)]
+
+# Solusi kedua dengan menambahkan null space ke solusi least squares
+beta_hat2_2 <- beta_hat1_2 + null_space2
+beta_hat3_2 <- beta_hat1_2 - null_space2
+
+# Tampilkan solusi alternatif
+print(beta_hat2_2)
+print(beta_hat3_2)
+```
+
+```{r}
+#7
+#Input Data
+M2_2 <- matrix(c(5,3,
+                 3,3),
+      nrow=2, byrow=TRUE)
+M2_2
+
+#Determinan
+DetM2_2 <- det(M2_2)
+DetM2_2
+
+#Invers
+M2_2_inv <- solve(M2_2)
+M2_2_inv
+
+#Transpose Invers
+tM2_2_inv <- t(M2_2_inv)
+tM2_2_inv
+
+#Invers Conditional
+M2_2_cond_inv <- matrix(0, nrow=3, ncol=3)
+M2_2_cond_inv[2:3,2:3] <- M2_2_inv
+M2_2_cond_inv
+```
+
+```{r}
+#8
+beta_hat4_2 <- M2_2_cond_inv %*% XtY2
+beta_hat4_2
+```
+
+## Soal 3
+
+```{r}
+# Input Data  
+X3 <- matrix(c(1,1,1,
+               1,1,1,
+               1,0,3,
+               1,0,3),
+      nrow = 4, byrow = TRUE) 
+X3  
+
+XtY3 <- matrix(c(9,6,5),
+        nrow=3,byrow=TRUE) 
+XtY3
+```
+
+```{r}
+#1 
+XtX3 <- t(X3) %*% X3 
+XtX3
+
+det3 <- det(XtX3) 
+det3
+```
+
+Singular
+
+```{r}
+#2 
+rank3 <- qr(XtX3)$rank 
+rank2
+```
+
+Terbukti
+
+```{r}
+#3 
+library(MASS) 
+XtX_inv3 <- ginv(XtX3)  
+
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat1_3 <- XtX_inv3 %*% XtY3
+beta_hat1_3
+```
+
+```{r}
+#4 
+#Input Data 
+M1_3 <- matrix(c(3,0,
+                 0,3),
+        nrow=2, byrow=TRUE) 
+M1_3
+
+#Determinan 
+DetM1_3 <- det(M1_3) 
+DetM1_3  
+
+#Invers 
+M1_3_inv <- solve(M1_3) 
+M1_3_inv  
+
+#Transpose Invers 
+tM1_3_inv <- t(M1_3_inv) 
+tM1_3_inv  
+
+#Invers Conditional 
+M1_3_cond_inv <- matrix(0, nrow=3, ncol=3) 
+M1_3_cond_inv[2:3,2:3] <- M1_3_inv 
+M1_3_cond_inv
+```
+
+```{r}
+#5 
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat2_3 <- XtX_inv3 %*% XtY2 
+beta_hat2_3
+```
+
+```{r}
+#6 
+# Menggunakan SVD untuk menemukan null space dari XtX 
+svd_result3 <- svd(XtX3) 
+null_space3 <- svd_result3$v[, which(svd_result3$d < 1e-10)]
+
+# Solusi kedua dengan menambahkan null space ke solusi least squares 
+beta_hat2_3 <- beta_hat1_3 + null_space3 
+beta_hat3_3 <- beta_hat1_3 - null_space3
+
+# Tampilkan solusi alternatif 
+print(beta_hat2_3) 
+print(beta_hat3_3)
+```
+
+```{r}
+#7 
+#Input Data 
+M2_3 <- matrix(c(5,3,
+                 3,3),
+        nrow=2, byrow=TRUE) 
+M2_3  
+
+#Determinan 
+DetM2_3 <- det(M2_3) 
+DetM2_3  
+
+#Invers 
+M2_3_inv <- solve(M2_3) 
+M2_3_inv  
+
+#Transpose Invers 
+tM2_3_inv <- t(M2_3_inv) 
+tM2_3_inv  
+
+#Invers Conditional 
+M2_3_cond_inv <- matrix(0, nrow=3, ncol=3) 
+M2_3_cond_inv[2:3,2:3] <- M2_3_inv 
+M2_3_cond_inv
+```
+
+```{r}
+#8 
+beta_hat4_3 <- M2_3_cond_inv %*% XtY3 
+beta_hat4_3
+```
+
+## Soal 4
+
+```{r}
+# Input Data  
+X4 <- matrix(c(1,4,0,
+               1,4,0,
+               1,0,2,
+               1,0,2),
+      nrow = 4, byrow = TRUE) 
+X4
+
+XtY4 <- matrix(c(8,6,4),
+        nrow=3,byrow=TRUE) 
+XtY4
+```
+
+```{r}
+#1 
+XtX4 <- t(X4) %*% X4
+XtX4
+
+det4 <- det(XtX4) 
+det4
+```
+
+Singular
+
+```{r}
+#2 
+rank4 <- qr(XtX4)$rank 
+rank4
+```
+
+Terbukti
+
+```{r}
+#3 
+library(MASS) 
+XtX_inv4 <- ginv(XtX4)  
+
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat1_4 <- XtX_inv4 %*% XtY4
+beta_hat1_4
+```
+
+```{r}
+#4 
+#Input Data 
+M1_4 <- matrix(c(3,0,
+                 0,3),       
+        nrow=2, byrow=TRUE) 
+M1_4  
+
+#Determinan 
+DetM1_4 <- det(M1_4) 
+DetM1_4
+
+#Invers 
+M1_4_inv <- solve(M1_4) 
+M1_4_inv  
+
+#Transpose Invers 
+tM1_4_inv <- t(M1_4_inv) 
+tM1_4_inv  
+
+#Invers Conditional 
+M1_4_cond_inv <- matrix(0, nrow=3, ncol=3) 
+M1_4_cond_inv[2:3,2:3] <- M1_4_inv 
+M1_4_cond_inv
+```
+
+```{r}
+#5 
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat2_3 <- XtX_inv3 %*% XtY3 
+beta_hat2_3
+```
+
+```{r}
+#6 
+# Menggunakan SVD untuk menemukan null space dari XtX 
+svd_result4 <- svd(XtX4) 
+null_space4 <- svd_result4$v[, which(svd_result4$d < 1e-10)]  
+# Solusi kedua dengan menambahkan null space ke solusi least squares 
+beta_hat2_4 <- beta_hat1_4 + null_space4 
+beta_hat3_4 <- beta_hat1_4 - null_space4  
+
+# Tampilkan solusi alternatif 
+print(beta_hat2_4) 
+print(beta_hat3_4)
+```
+
+```{r}
+#7 
+#Input Data 
+M2_4 <- matrix(c(5,3,
+                 3,3),
+        nrow=2, byrow=TRUE) 
+M2_4  
+
+#Determinan 
+DetM2_4 <- det(M2_4) 
+DetM2_4  
+
+#Invers 
+M2_4_inv <- solve(M2_4) 
+M2_4_inv  
+
+#Transpose Invers 
+tM2_4_inv <- t(M2_4_inv) 
+tM2_4_inv  
+
+#Invers Conditional 
+M2_4_cond_inv <- matrix(0, nrow=3, ncol=3) 
+M2_4_cond_inv[2:3,2:3] <- M2_4_inv 
+M2_4_cond_inv
+```
+
+```{r}
+#8 
+beta_hat4_4 <- M2_4_cond_inv %*% XtY4 
+beta_hat4_4
+```
+
+## Soal 5
+
+```{r}
+# Input Data  
+X5 <- matrix(c(1,2,1,
+               1,2,1,
+               1,1,3,
+               1,1,3),
+      nrow = 4, byrow = TRUE) 
+X5  
+
+XtY5 <- matrix(c(10,7,6),
+        nrow=3,byrow=TRUE) 
+XtY5
+```
+
+```{r}
+#1 
+XtX5 <- t(X5) %*% X5
+XtX5
+
+det5 <- det(XtX5) 
+det5
+```
+
+Singular
+
+```{r}
+#2 
+rank5 <- qr(XtX5)$rank 
+rank5
+```
+
+Terbukti
+
+```{r}
+#3 
+library(MASS) 
+XtX_inv5 <- ginv(XtX5)  
+
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat1_5 <- XtX_inv5 %*% XtY5
+beta_hat1_5
+```
+
+```{r}
+#4 
+#Input Data 
+M1_5 <- matrix(c(3,0,
+                 0,3),
+        nrow=2, byrow=TRUE) 
+M1_5  
+
+#Determinan 
+DetM1_5 <- det(M1_5) 
+DetM1_5  
+
+#Invers 
+M1_5_inv <- solve(M1_5) 
+M1_5_inv  
+
+#Transpose Invers 
+tM1_5_inv <- t(M1_5_inv) 
+tM1_5_inv
+
+#Invers Conditional 
+M1_5_cond_inv <- matrix(0, nrow=3, ncol=3) 
+M1_5_cond_inv[2:3,2:3] <- M1_5_inv 
+M1_5_cond_inv
+```
+
+```{r}
+#5 
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat2_5 <- XtX_inv5 %*% XtY5
+beta_hat2_5
+```
+
+```{r}
+#6 
+# Menggunakan SVD untuk menemukan null space dari XtX 
+svd_result5 <- svd(XtX5) 
+null_space5 <- svd_result5$v[, which(svd_result5$d < 1e-10)]  
+# Solusi kedua dengan menambahkan null space ke solusi least squares 
+beta_hat2_5 <- beta_hat1_5 + null_space5
+beta_hat3_5 <- beta_hat1_5 - null_space5
+
+# Tampilkan solusi alternatif 
+print(beta_hat2_5) 
+print(beta_hat3_5)
+```
+
+```{r}
+#7 
+#Input Data 
+M2_5 <- matrix(c(5,3,
+                 3,3),
+        nrow=2, byrow=TRUE) 
+M2_5  
+
+#Determinan 
+DetM2_5 <- det(M2_5) 
+DetM2_5 
+
+#Invers
+M2_5_inv <- solve(M2_5) 
+M2_5_inv  
+
+#Transpose Invers 
+tM2_5_inv <- t(M2_5_inv) 
+tM2_5_inv  
+
+#Invers Conditional 
+M2_5_cond_inv <- matrix(0, nrow=3, ncol=3) 
+M2_5_cond_inv[2:3,2:3] <- M2_5_inv 
+M2_5_cond_inv
+```
+
+```{r}
+#8 
+beta_hat4_5 <- M2_5_cond_inv %*% XtY5
+beta_hat4_5
+```
+
+## Soal 6
+
+```{r}
+# Input Data  
+X6 <- matrix(c(1,2,0,
+               1,2,0,
+               1,0,3,
+               1,0,3),
+      nrow = 4, byrow = TRUE) 
+X6  
+
+XtY6 <- matrix(c(11,8,6),
+        nrow=3,byrow=TRUE) 
+XtY6
+```
+
+```{r}
+#1 
+XtX6 <- t(X6) %*% X6
+XtX6  
+
+det6 <- det(XtX6) 
+det6
+```
+
+Singular
+
+```{r}
+#2 
+rank6 <- qr(XtX6)$rank 
+rank6
+```
+
+Terbukti
+
+```{r}
+#3 
+library(MASS) 
+XtX_inv6 <- ginv(XtX6)
+
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat1_6 <- XtX_inv6 %*% XtY6
+beta_hat1_6
+```
+
+```{r}
+#4 
+#Input Data 
+M1_6 <- matrix(c(3,0,
+                 0,3),
+        nrow=2, byrow=TRUE) 
+M1_6  
+
+#Determinan 
+DetM1_6 <- det(M1_6) 
+DetM1_6
+
+#Invers 
+M1_6_inv <- solve(M1_6)
+M1_6_inv  
+
+#Transpose Invers 
+tM1_6_inv <- t(M1_6_inv)
+tM1_6_inv 
+
+#Invers Conditional 
+M1_6_cond_inv <- matrix(0, nrow=3, ncol=3) 
+M1_6_cond_inv[2:3,2:3] <- M1_6_inv 
+M1_6_cond_inv
+```
+
+```{r}
+#5 
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat2_6 <- XtX_inv6 %*% XtY6 
+beta_hat2_6
+```
+
+```{r}
+#6 
+# Menggunakan SVD untuk menemukan null space dari XtX 
+svd_result6 <- svd(XtX6) 
+null_space6 <- svd_result6$v[, which(svd_result6$d < 1e-10)] 
+# Solusi kedua dengan menambahkan null space ke solusi least squares 
+beta_hat2_6 <- beta_hat1_6 + null_space6 
+beta_hat3_6 <- beta_hat1_6 - null_space6  
+
+# Tampilkan solusi alternatif 
+print(beta_hat2_6) 
+print(beta_hat3_6)
+```
+
+```{r}
+#7 
+#Input Data 
+M2_6 <- matrix(c(5,3,
+                 3,3),
+        nrow=2, byrow=TRUE) 
+M2_6  
+
+#Determinan 
+DetM2_6 <- det(M2_6) 
+DetM2_6  
+
+#Invers 
+M2_6_inv <- solve(M2_6) 
+M2_6_inv  
+
+#Transpose Invers 
+tM2_6_inv <- t(M2_6_inv) 
+tM2_6_inv  
+
+#Invers Conditional 
+M2_6_cond_inv <- matrix(0, nrow=3, ncol=3) 
+M2_6_cond_inv[2:3,2:3] <- M2_6_inv
+M2_6_cond_inv
+```
+
+```{r}
+#8 
+beta_hat4_6 <- M2_6_cond_inv %*% XtY6
+beta_hat4_6
+```
+
+## Soal 7
+
+```{r}
+# Input Data  
+X7 <- matrix(c(1,3,1,
+               1,3,1,
+               1,0,1,
+               1,0,1),
+      nrow = 4, byrow = TRUE) 
+X7 
+
+XtY7 <- matrix(c(6,4,2),
+        nrow=3,byrow=TRUE) 
+XtY7
+```
+
+```{r}
+#1 
+XtX7 <- t(X7) %*% X7 
+XtX7  
+
+det7 <- det(XtX7)
+det7
+```
+
+Singular
+
+```{r}
+#2 
+rank7 <- qr(XtX7)$rank 
+rank7
+```
+
+```{r}
+#3 
+library(MASS) 
+XtX_inv7 <- ginv(XtX7)  
+
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat1_7 <- XtX_inv7 %*% XtY7 
+beta_hat1_7
+```
+
+```{r}
+#4 
+#Input Data 
+M1_7 <- matrix(c(3,0,
+                 0,3),
+        nrow=2, byrow=TRUE) 
+M1_7  
+
+#Determinan 
+DetM1_7 <- det(M1_7) 
+DetM1_7 
+
+#Invers
+M1_7_inv <- solve(M1_7)
+M1_7_inv  
+
+#Transpose Invers 
+tM1_7_inv <- t(M1_7_inv) 
+tM1_7_inv  
+
+#Invers Conditional 
+M1_7_cond_inv <- matrix(0, nrow=3, ncol=3)
+M1_7_cond_inv[2:3,2:3] <- M1_7_inv 
+M1_7_cond_inv
+```
+
+```{r}
+#5 
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat2_7 <- XtX_inv7 %*% XtY7 
+beta_hat2_7
+```
+
+```{r}
+#6 
+# Menggunakan SVD untuk menemukan null space dari XtX 
+svd_result7 <- svd(XtX7)
+null_space7 <- svd_result7$v[, which(svd_result7$d < 1e-10)]  
+# Solusi kedua dengan menambahkan null space ke solusi least squares 
+beta_hat2_7 <- beta_hat1_7 + null_space7 
+beta_hat3_7 <- beta_hat1_7 - null_space7
+
+# Tampilkan solusi alternatif 
+print(beta_hat2_7)
+print(beta_hat3_7)
+```
+
+```{r}
+#7 
+#Input Data
+M2_7 <- matrix(c(5,3,
+                 3,3),
+        nrow=2, byrow=TRUE) 
+M2_7
+
+#Determinan 
+DetM2_7 <- det(M2_7) 
+DetM2_7
+
+#Invers 
+M2_7_inv <- solve(M2_7)
+M2_7_inv
+
+#Transpose Invers 
+tM2_7_inv <- t(M2_7_inv) 
+tM2_7_inv
+
+#Invers Conditional 
+M2_7_cond_inv <- matrix(0, nrow=3, ncol=3) 
+M2_7_cond_inv[2:3,2:3] <- M2_7_inv 
+M2_7_cond_inv
+```
+
+```{r}
+#8 
+beta_hat4_7 <- M2_7_cond_inv %*% XtY7
+beta_hat4_7
+```
+
+## Soal 8
+
+```{r}
+# Input Data  
+X8 <- matrix(c(1,1,2,
+               1,1,2,
+               1,0,1,
+               1,0,1),
+      nrow = 4, byrow = TRUE) 
+X8 
+
+XtY8 <- matrix(c(12,9,6),  
+        nrow=3,byrow=TRUE) 
+XtY8
+```
+
+```{r}
+#1 
+XtX8 <- t(X8) %*% X8 
+XtX8  
+
+det8 <- det(XtX8)
+det8
+```
+
+Singular
+
+```{r}
+#2 
+rank8 <- qr(XtX8)$rank 
+rank8
+```
+
+Terbukti
+
+```{r}
+#3 
+library(MASS) 
+XtX_inv8 <- ginv(XtX8)  
+
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat1_8 <- XtX_inv8 %*% XtY8
+beta_hat1_8
+```
+
+```{r}
+#4 
+#Input Data 
+M1_8 <- matrix(c(3,0,
+                 0,3),
+        nrow=2, byrow=TRUE) 
+M1_8  
+
+#Determinan 
+DetM1_8 <- det(M1_8) 
+DetM1_8 
+
+#Invers
+M1_8_inv <- solve(M1_8)
+M1_8_inv  
+
+#Transpose Invers 
+tM1_8_inv <- t(M1_8_inv) 
+tM1_8_inv  
+
+#Invers Conditional 
+M1_8_cond_inv <- matrix(0, nrow=3, ncol=3)
+M1_8_cond_inv[2:3,2:3] <- M1_8_inv 
+M1_8_cond_inv
+```
+
+```{r}
+#5 
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat2_8 <- XtX_inv8 %*% XtY8
+beta_hat2_8
+```
+
+```{r}
+#6 
+# Menggunakan SVD untuk menemukan null space dari XtX 
+svd_result8 <- svd(XtX8)
+null_space8 <- svd_result8$v[, which(svd_result8$d < 1e-10)]  
+# Solusi kedua dengan menambahkan null space ke solusi least squares 
+beta_hat2_8 <- beta_hat1_8 + null_space8
+beta_hat3_8 <- beta_hat1_8 - null_space8
+
+# Tampilkan solusi alternatif 
+print(beta_hat2_8)
+print(beta_hat3_8)
+```
+
+```{r}
+#7 
+#Input Data
+M2_8 <- matrix(c(5,3,
+                 3,3),
+        nrow=2, byrow=TRUE) 
+M2_8
+
+#Determinan 
+DetM2_8 <- det(M2_8) 
+DetM2_8
+
+#Invers 
+M2_8_inv <- solve(M2_8)
+M2_8_inv
+
+#Transpose Invers 
+tM2_8_inv <- t(M2_8_inv) 
+tM2_8_inv
+
+#Invers Conditional 
+M2_8_cond_inv <- matrix(0, nrow=3, ncol=3) 
+M2_8_cond_inv[2:3,2:3] <- M2_8_inv 
+M2_8_cond_inv
+```
+
+```{r}
+#8 
+beta_hat4_8 <- M2_8_cond_inv %*% XtY8
+beta_hat4_8
+```
+
+## Soal 9
+
+```{r}
+# Input Data   
+X9 <- matrix(c(1,2,1,
+               1,2,1,
+               1,0,2,
+               1,0,2),
+      nrow = 4, byrow = TRUE)
+X9   
+
+XtY9 <- matrix(c(7,5,3),
+        nrow=3,byrow=TRUE)  
+XtY9
+```
+
+```{r}
+#1 
+XtX9 <- t(X9) %*% X9
+XtX9  
+
+det9 <- det(XtX9)
+det9
+```
+
+Singular
+
+```{r}
+#2 
+rank9 <- qr(XtX9)$rank 
+rank9
+```
+
+Terbukti
+
+```{r}
+#3 
+library(MASS) 
+XtX_inv9 <- ginv(XtX9)  
+
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat1_9 <- XtX_inv9 %*% XtY9
+beta_hat1_9
+```
+
+```{r}
+#4 
+#Input Data 
+M1_9 <- matrix(c(3,0,
+                 0,3),
+        nrow=2, byrow=TRUE) 
+M1_9  
+
+#Determinan 
+DetM1_9 <- det(M1_9) 
+DetM1_9 
+
+#Invers
+M1_9_inv <- solve(M1_9)
+M1_9_inv  
+
+#Transpose Invers 
+tM1_9_inv <- t(M1_9_inv) 
+tM1_9_inv  
+
+#Invers Conditional 
+M1_9_cond_inv <- matrix(0, nrow=3, ncol=3)
+M1_9_cond_inv[2:3,2:3] <- M1_9_inv 
+M1_9_cond_inv
+```
+
+```{r}
+#5 
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat2_9 <- XtX_inv9 %*% XtY9
+beta_hat2_9
+```
+
+```{r}
+#6 
+# Menggunakan SVD untuk menemukan null space dari XtX 
+svd_result9 <- svd(XtX9)
+null_space9 <- svd_result9$v[, which(svd_result9$d < 1e-10)]  
+
+# Solusi kedua dengan menambahkan null space ke solusi least squares 
+beta_hat2_9 <- beta_hat1_9 + null_space9
+beta_hat3_9 <- beta_hat1_9 - null_space9
+
+# Tampilkan solusi alternatif 
+print(beta_hat2_9)
+print(beta_hat3_9)
+```
+
+```{r}
+#7 
+#Input Data
+M2_9 <- matrix(c(5,3,
+                 3,3),
+        nrow=2, byrow=TRUE) 
+M2_9
+
+#Determinan 
+DetM2_9 <- det(M2_9) 
+DetM2_9
+
+#Invers 
+M2_9_inv <- solve(M2_9)
+M2_9_inv
+
+#Transpose Invers 
+tM2_9_inv <- t(M2_9_inv) 
+tM2_9_inv
+
+#Invers Conditional 
+M2_9_cond_inv <- matrix(0, nrow=3, ncol=3) 
+M2_9_cond_inv[2:3,2:3] <- M2_9_inv 
+M2_9_cond_inv
+```
+
+```{r}
+#8
+beta_hat4_9 <- M2_9_cond_inv %*% XtY9
+beta_hat4_9
+```
+
+## Soal 10
+
+```{r}
+# Input Data   
+X10 <- matrix(c(1,1,0,
+               1,1,0,
+               1,0,1,
+               1,0,1),
+      nrow = 4, byrow = TRUE)
+X10   
+
+XtY10 <- matrix(c(7,5,3),
+        nrow=3,byrow=TRUE)  
+XtY10
+```
+
+```{r}
+#1 
+XtX10 <- t(X10) %*% X10
+XtX10  
+
+det10 <- det(XtX10)
+det10
+```
+
+Singular
+
+```{r}
+#2 
+rank10 <- qr(XtX10)$rank 
+rank10
+```
+
+Terbukti
+
+```{r}
+#3 
+library(MASS) 
+XtX_inv10 <- ginv(XtX10)  
+
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat1_10 <- XtX_inv10 %*% XtY10
+beta_hat1_10
+```
+
+```{r}
+#4 
+#Input Data 
+M1_10 <- matrix(c(3,0,
+                 0,3),
+        nrow=2, byrow=TRUE) 
+M1_10  
+
+#Determinan 
+DetM1_10 <- det(M1_10) 
+DetM1_10 
+
+#Invers
+M1_10_inv <- solve(M1_10)
+M1_10_inv  
+
+#Transpose Invers 
+tM1_10_inv <- t(M1_10_inv) 
+tM1_10_inv  
+
+#Invers Conditional 
+M1_10_cond_inv <- matrix(0, nrow=3, ncol=3)
+M1_10_cond_inv[2:3,2:3] <- M1_10_inv 
+M1_10_cond_inv
+```
+
+```{r}
+#5 
+# Hitung beta_hat sebagai solusi dari sistem persamaan normal 
+beta_hat2_10 <- XtX_inv10 %*% XtY10
+beta_hat2_10
+```
+
+```{r}
+#6 
+# Menggunakan SVD untuk menemukan null space dari XtX 
+svd_result10 <- svd(XtX10)
+null_space10 <- svd_result10$v[, which(svd_result10$d < 1e-10)]  
+
+# Solusi kedua dengan menambahkan null space ke solusi least squares 
+beta_hat2_10 <- beta_hat1_10 + null_space10
+beta_hat3_10 <- beta_hat1_10 - null_space10
+
+# Tampilkan solusi alternatif 
+print(beta_hat2_10)
+print(beta_hat3_10)
+```
+
+```{r}
+#7 
+#Input Data
+M2_10 <- matrix(c(5,3,
+                 3,3),
+        nrow=2, byrow=TRUE) 
+M2_10
+
+#Determinan 
+DetM2_10 <- det(M2_10) 
+DetM2_10
+
+#Invers 
+M2_10_inv <- solve(M2_10)
+M2_10_inv
+
+#Transpose Invers 
+tM2_10_inv <- t(M2_10_inv) 
+tM2_10_inv
+
+#Invers Conditional 
+M2_10_cond_inv <- matrix(0, nrow=3, ncol=3) 
+M2_10_cond_inv[2:3,2:3] <- M2_10_inv 
+M2_10_cond_inv
+```
+
+```{r}
+#8
+beta_hat4_10 <- M2_10_cond_inv %*% XtY10
+beta_hat4_10
+```
