@@ -1,0 +1,592 @@
+---
+title: "PML_Prak_Pert12"
+author: "Anindya Septyani G1401221074"
+date: "2024-11-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Dua Faktor Dengan Interaksi
+
+# Soal 1
+
+$$
+y_{ijk}=\mu + \tau_i + \beta_j + (\tau\beta)_{ij} + \epsilon_{ijk}\\i=1,2;\\j=1,3;\\k=1,2
+$$
+
+```{r}
+# Jumlah level faktor
+i_levels <- 2  # Faktor pertama (tau)
+j_levels <- 2  # Faktor kedua (beta)
+k_reps <- 2    # Ulangan
+
+# Total observasi
+n_obs <- i_levels * j_levels * k_reps
+
+# Buat desain matriks X
+# Kolom untuk Intercept
+Intercept <- rep(1, n_obs)
+
+# Kolom untuk faktor pertama (tau)
+tau <- rep(rep(1:i_levels, each = j_levels * k_reps), 1)
+
+# Kolom untuk faktor kedua (beta)
+beta <- rep(rep(1:j_levels, each = k_reps), i_levels)
+
+# Kolom untuk interaksi antara tau dan beta
+interaction <- interaction(tau, beta)
+
+# Buat matriks desain X
+X <- model.matrix(~ tau + beta + tau:beta)
+
+# Buat vektor y 
+y <- rnorm(n_obs)  
+
+# Hitung X'y
+Xt_y <- t(X) %*% y
+
+# Hitung rank dari matriks X
+rank_X <- qr(X)$rank
+
+# Tampilkan hasil
+print("Hasil perkalian X'y:")
+print(Xt_y)
+print(paste("Rank dari matriks X:", rank_X))
+
+# Matriks X'X
+X_transpose_X <- t(X) %*% X
+print("Matriks X'X:")
+print(X_transpose_X)
+
+# Invers dari X'X
+X_inv <- solve(X_transpose_X)
+
+# Tampilkan invers dari X'X
+print("Invers dari X'X:")
+print(X_inv)
+```
+
+# Soal 2
+
+$$
+y_{ijk}=\mu+\tau_i+\beta_j+(\tau\beta)_{ij}+\epsilon_{ijk}\\i=1,2,3;\\j=1,2;\\k=1,2
+$$
+
+```{r}
+# Jumlah level faktor
+i_levels <- 3  # Faktor pertama (tau)
+j_levels <- 2  # Faktor kedua (beta)
+k_reps <- 2    # Ulangan
+
+# Total observasi
+n_obs <- i_levels * j_levels * k_reps
+
+# Buat desain matriks X
+# Kolom untuk Intercept
+Intercept <- rep(1, n_obs)
+
+# Kolom untuk faktor pertama (tau)
+tau <- rep(rep(1:i_levels, each = j_levels * k_reps), 1)
+
+# Kolom untuk faktor kedua (beta)
+beta <- rep(rep(1:j_levels, each = k_reps), i_levels)
+
+# Kolom untuk interaksi antara tau dan beta
+interaction <- interaction(tau, beta)
+
+# Buat matriks desain X
+X <- model.matrix(~ tau + beta + tau:beta)
+
+# Buat vektor y 
+y <- rnorm(n_obs)  
+
+# Hitung X'y
+Xt_y <- t(X) %*% y
+
+# Hitung rank dari matriks X
+rank_X <- qr(X)$rank
+
+# Tampilkan hasil
+print("Hasil perkalian X'y:")
+print(Xt_y)
+print(paste("Rank dari matriks X:", rank_X))
+
+# Matriks X'X
+X_transpose_X <- t(X) %*% X
+print("Matriks X'X:")
+print(X_transpose_X)
+
+# Invers dari X'X
+X_inv <- solve(X_transpose_X)
+
+# Tampilkan invers dari X'X
+print("Invers dari X'X:")
+print(X_inv)
+```
+
+# Soal 3
+
+$$
+y_{ijk}=\mu+\tau_i+\beta_j+(\tau\beta)_{ij}+\epsilon_{ijk}\\i=1,2;\\j=1,2,3;\\k=1
+$$
+
+```{r}
+# Jumlah level faktor
+i_levels <- 2  # Faktor pertama (tau)
+j_levels <- 3  # Faktor kedua (beta)
+k_reps <- 1    # Ulangan
+
+# Total observasi
+n_obs <- i_levels * j_levels * k_reps
+
+# Buat desain matriks X
+# Kolom untuk Intercept
+Intercept <- rep(1, n_obs)
+
+# Kolom untuk faktor pertama (tau)
+tau <- rep(rep(1:i_levels, each = j_levels * k_reps), 1)
+
+# Kolom untuk faktor kedua (beta)
+beta <- rep(rep(1:j_levels, each = k_reps), i_levels)
+
+# Kolom untuk interaksi antara tau dan beta
+interaction <- interaction(tau, beta)
+
+# Buat matriks desain X
+X <- model.matrix(~ tau + beta + tau:beta)
+
+# Buat vektor y 
+y <- rnorm(n_obs)  
+
+# Hitung X'y
+Xt_y <- t(X) %*% y
+
+# Hitung rank dari matriks X
+rank_X <- qr(X)$rank
+
+# Tampilkan hasil
+print("Hasil perkalian X'y:")
+print(Xt_y)
+print(paste("Rank dari matriks X:", rank_X))
+
+# Matriks X'X
+X_transpose_X <- t(X) %*% X
+print("Matriks X'X:")
+print(X_transpose_X)
+
+# Invers dari X'X
+X_inv <- solve(X_transpose_X)
+
+# Tampilkan invers dari X'X
+print("Invers dari X'X:")
+print(X_inv)
+```
+
+# Soal 4
+
+$$
+y_{ijk}=\mu+\tau_i+\beta_j+(\tau\beta)_{ij}+\epsilon_{ijk}\\i=1,2,3;\\j=1,2,3;\\k=1,2
+$$
+
+```{r}
+# Jumlah level faktor
+i_levels <- 3  # Faktor pertama (tau)
+j_levels <- 3  # Faktor kedua (beta)
+k_reps <- 2    # Ulangan
+
+# Total observasi
+n_obs <- i_levels * j_levels * k_reps
+
+# Buat desain matriks X
+# Kolom untuk Intercept
+Intercept <- rep(1, n_obs)
+
+# Kolom untuk faktor pertama (tau)
+tau <- rep(rep(1:i_levels, each = j_levels * k_reps), 1)
+
+# Kolom untuk faktor kedua (beta)
+beta <- rep(rep(1:j_levels, each = k_reps), i_levels)
+
+# Kolom untuk interaksi antara tau dan beta
+interaction <- interaction(tau, beta)
+
+# Buat matriks desain X
+X <- model.matrix(~ tau + beta + tau:beta)
+
+# Buat vektor y 
+y <- rnorm(n_obs)  
+
+# Hitung X'y
+Xt_y <- t(X) %*% y
+
+# Hitung rank dari matriks X
+rank_X <- qr(X)$rank
+
+# Tampilkan hasil
+print("Hasil perkalian X'y:")
+print(Xt_y)
+print(paste("Rank dari matriks X:", rank_X))
+
+# Matriks X'X
+X_transpose_X <- t(X) %*% X
+print("Matriks X'X:")
+print(X_transpose_X)
+
+# Invers dari X'X
+X_inv <- solve(X_transpose_X)
+
+# Tampilkan invers dari X'X
+print("Invers dari X'X:")
+print(X_inv)
+```
+
+# Soal 5
+
+$$
+y_{ijk}=\mu+\tau_i+\beta_j+(\tau\beta)_{ij}+\epsilon_{ijk}\\i=1,2;\\j=1,2;\\k=1,2,3
+$$
+
+```{r}
+# Jumlah level faktor
+i_levels <- 2  # Faktor pertama (tau)
+j_levels <- 2  # Faktor kedua (beta)
+k_reps <- 3    # Ulangan
+
+# Total observasi
+n_obs <- i_levels * j_levels * k_reps
+
+# Buat desain matriks X
+# Kolom untuk Intercept
+Intercept <- rep(1, n_obs)
+
+# Kolom untuk faktor pertama (tau)
+tau <- rep(rep(1:i_levels, each = j_levels * k_reps), 1)
+
+# Kolom untuk faktor kedua (beta)
+beta <- rep(rep(1:j_levels, each = k_reps), i_levels)
+
+# Kolom untuk interaksi antara tau dan beta
+interaction <- interaction(tau, beta)
+
+# Buat matriks desain X
+X <- model.matrix(~ tau + beta + tau:beta)
+
+# Buat vektor y 
+y <- rnorm(n_obs)  
+
+# Hitung X'y
+Xt_y <- t(X) %*% y
+
+# Hitung rank dari matriks X
+rank_X <- qr(X)$rank
+
+# Tampilkan hasil
+print("Hasil perkalian X'y:")
+print(Xt_y)
+print(paste("Rank dari matriks X:", rank_X))
+
+# Matriks X'X
+X_transpose_X <- t(X) %*% X
+print("Matriks X'X:")
+print(X_transpose_X)
+
+# Invers dari X'X
+X_inv <- solve(X_transpose_X)
+
+# Tampilkan invers dari X'X
+print("Invers dari X'X:")
+print(X_inv)
+```
+
+# Soal 6
+
+$$
+y_{ijk}=\mu+\tau_i+\beta_j+(\tau\beta)_{ij}+\epsilon_{ijk}\\i=1,2,3;\\j=1,2;\\k=1
+$$
+
+```{r}
+# Jumlah level faktor
+i_levels <- 3  # Faktor pertama (tau)
+j_levels <- 2  # Faktor kedua (beta)
+k_reps <- 1    # Ulangan
+
+# Total observasi
+n_obs <- i_levels * j_levels * k_reps
+
+# Buat desain matriks X
+# Kolom untuk Intercept
+Intercept <- rep(1, n_obs)
+
+# Kolom untuk faktor pertama (tau)
+tau <- rep(rep(1:i_levels, each = j_levels * k_reps), 1)
+
+# Kolom untuk faktor kedua (beta)
+beta <- rep(rep(1:j_levels, each = k_reps), i_levels)
+
+# Kolom untuk interaksi antara tau dan beta
+interaction <- interaction(tau, beta)
+
+# Buat matriks desain X
+X <- model.matrix(~ tau + beta + tau:beta)
+
+# Buat vektor y 
+y <- rnorm(n_obs)  
+
+# Hitung X'y
+Xt_y <- t(X) %*% y
+
+# Hitung rank dari matriks X
+rank_X <- qr(X)$rank
+
+# Tampilkan hasil
+print("Hasil perkalian X'y:")
+print(Xt_y)
+print(paste("Rank dari matriks X:", rank_X))
+
+# Matriks X'X
+X_transpose_X <- t(X) %*% X
+print("Matriks X'X:")
+print(X_transpose_X)
+
+# Invers dari X'X
+X_inv <- solve(X_transpose_X)
+
+# Tampilkan invers dari X'X
+print("Invers dari X'X:")
+print(X_inv)
+```
+
+# Soal 7
+
+$$
+y_{ijk}=\mu+\tau_i+\beta_j+(\tau\beta)_{ij}+\epsilon_{ijk}\\i=1,2;\\j=1,2,3;\\k=,1,2
+$$
+
+```{r}
+# Jumlah level faktor
+i_levels <- 2  # Faktor pertama (tau)
+j_levels <- 3  # Faktor kedua (beta)
+k_reps <- 2    # Ulangan
+
+# Total observasi
+n_obs <- i_levels * j_levels * k_reps
+
+# Buat desain matriks X
+# Kolom untuk Intercept
+Intercept <- rep(1, n_obs)
+
+# Kolom untuk faktor pertama (tau)
+tau <- rep(rep(1:i_levels, each = j_levels * k_reps), 1)
+
+# Kolom untuk faktor kedua (beta)
+beta <- rep(rep(1:j_levels, each = k_reps), i_levels)
+
+# Kolom untuk interaksi antara tau dan beta
+interaction <- interaction(tau, beta)
+
+# Buat matriks desain X
+X <- model.matrix(~ tau + beta + tau:beta)
+
+# Buat vektor y 
+y <- rnorm(n_obs)  
+
+# Hitung X'y
+Xt_y <- t(X) %*% y
+
+# Hitung rank dari matriks X
+rank_X <- qr(X)$rank
+
+# Tampilkan hasil
+print("Hasil perkalian X'y:")
+print(Xt_y)
+print(paste("Rank dari matriks X:", rank_X))
+
+# Matriks X'X
+X_transpose_X <- t(X) %*% X
+print("Matriks X'X:")
+print(X_transpose_X)
+
+# Invers dari X'X
+X_inv <- solve(X_transpose_X)
+
+# Tampilkan invers dari X'X
+print("Invers dari X'X:")
+print(X_inv)
+```
+
+# Soal 8
+
+$$
+y_{ijk}=\mu+\tau_i+\beta_j+(\tau\beta)_{ij}+\epsilon_{ijk}\\i=1,2;\\j=1,3;\\k=1
+$$
+
+```{r}
+# Jumlah level faktor
+i_levels <- 2  # Faktor pertama (tau)
+j_levels <- 2  # Faktor kedua (beta)
+k_reps <- 1    # Ulangan
+
+# Total observasi
+n_obs <- i_levels * j_levels * k_reps
+
+# Buat desain matriks X
+# Kolom untuk Intercept
+Intercept <- rep(1, n_obs)
+
+# Kolom untuk faktor pertama (tau)
+tau <- rep(rep(1:i_levels, each = j_levels * k_reps), 1)
+
+# Kolom untuk faktor kedua (beta)
+beta <- rep(rep(1:j_levels, each = k_reps), i_levels)
+
+# Kolom untuk interaksi antara tau dan beta
+interaction <- interaction(tau, beta)
+
+# Buat matriks desain X
+X <- model.matrix(~ tau + beta + tau:beta)
+
+# Buat vektor y 
+y <- rnorm(n_obs)  
+
+# Hitung X'y
+Xt_y <- t(X) %*% y
+
+# Hitung rank dari matriks X
+rank_X <- qr(X)$rank
+
+# Tampilkan hasil
+print("Hasil perkalian X'y:")
+print(Xt_y)
+print(paste("Rank dari matriks X:", rank_X))
+
+# Matriks X'X
+X_transpose_X <- t(X) %*% X
+print("Matriks X'X:")
+print(X_transpose_X)
+
+# Invers dari X'X
+X_inv <- solve(X_transpose_X)
+
+# Tampilkan invers dari X'X
+print("Invers dari X'X:")
+print(X_inv)
+```
+
+# Soal 9
+
+$$
+y_{ijk}=\mu+\tau_i+\beta_j+(\tau\beta)_{ij}+\epsilon_{ijk}\\i=1,3;\\j=1,2;\\k=1,2
+$$
+
+```{r}
+# Jumlah level faktor
+i_levels <- 2  # Faktor pertama (tau)
+j_levels <- 2  # Faktor kedua (beta)
+k_reps <- 2    # Ulangan
+
+# Total observasi
+n_obs <- i_levels * j_levels * k_reps
+
+# Buat desain matriks X
+# Kolom untuk Intercept
+Intercept <- rep(1, n_obs)
+
+# Kolom untuk faktor pertama (tau)
+tau <- rep(rep(1:i_levels, each = j_levels * k_reps), 1)
+
+# Kolom untuk faktor kedua (beta)
+beta <- rep(rep(1:j_levels, each = k_reps), i_levels)
+
+# Kolom untuk interaksi antara tau dan beta
+interaction <- interaction(tau, beta)
+
+# Buat matriks desain X
+X <- model.matrix(~ tau + beta + tau:beta)
+
+# Buat vektor y 
+y <- rnorm(n_obs)  
+
+# Hitung X'y
+Xt_y <- t(X) %*% y
+
+# Hitung rank dari matriks X
+rank_X <- qr(X)$rank
+
+# Tampilkan hasil
+print("Hasil perkalian X'y:")
+print(Xt_y)
+print(paste("Rank dari matriks X:", rank_X))
+
+# Matriks X'X
+X_transpose_X <- t(X) %*% X
+print("Matriks X'X:")
+print(X_transpose_X)
+
+# Invers dari X'X
+X_inv <- solve(X_transpose_X)
+
+# Tampilkan invers dari X'X
+print("Invers dari X'X:")
+print(X_inv)
+```
+
+# Soal 10
+
+$$
+y_{ijk}=\mu+\tau_i+\beta_j+(\tau\beta)_{ij}+\epsilon_{ijk}\\i=1,2;\\j=1,2,3;\\k=1,2,3
+$$
+
+```{r}
+# Jumlah level faktor
+i_levels <- 2  # Faktor pertama (tau)
+j_levels <- 3  # Faktor kedua (beta)
+k_reps <- 3    # Ulangan
+
+# Total observasi
+n_obs <- i_levels * j_levels * k_reps
+
+# Buat desain matriks X
+# Kolom untuk Intercept
+Intercept <- rep(1, n_obs)
+
+# Kolom untuk faktor pertama (tau)
+tau <- rep(rep(1:i_levels, each = j_levels * k_reps), 1)
+
+# Kolom untuk faktor kedua (beta)
+beta <- rep(rep(1:j_levels, each = k_reps), i_levels)
+
+# Kolom untuk interaksi antara tau dan beta
+interaction <- interaction(tau, beta)
+
+# Buat matriks desain X
+X <- model.matrix(~ tau + beta + tau:beta)
+
+# Buat vektor y 
+y <- rnorm(n_obs)  
+
+# Hitung X'y
+Xt_y <- t(X) %*% y
+
+# Hitung rank dari matriks X
+rank_X <- qr(X)$rank
+
+# Tampilkan hasil
+print("Hasil perkalian X'y:")
+print(Xt_y)
+print(paste("Rank dari matriks X:", rank_X))
+
+# Matriks X'X
+X_transpose_X <- t(X) %*% X
+print("Matriks X'X:")
+print(X_transpose_X)
+
+# Invers dari X'X
+X_inv <- solve(X_transpose_X)
+
+# Tampilkan invers dari X'X
+print("Invers dari X'X:")
+print(X_inv)
+```
