@@ -1,0 +1,257 @@
+---
+title: "PML_Prak_Pert13"
+author: "Anindya Septyani G1401221074"
+date: "2024-11-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Analisis Peragam Ancova
+
+# Soal 1: Pengaruh Pupuk terhadap Pertumbuhan Tanaman
+
+```{r}
+# Membuat data frame
+soal1 <- data.frame(
+  Pupuk = rep(c("A", "B", "C"), each = 4),
+  X = c(6.5,6.7,6.8,6.6,7.0,7.2,7.1,6.9,5.5,5.7,5.8,5.6),
+  Y = c(30,28,32,31,35,33,36,34,25,24,23,26)
+)
+
+# Regresi linier
+model1 <- lm(Y ~ X, data = soal1)
+
+# Ringkasan model regresi
+summary(model1)
+
+# Menambahkan Y yang dikoreksi (residual)
+soal1$Y_koreksi <- residuals(model1)
+
+# Tampilkan data dengan Y yang dikoreksi
+print(soal1)
+```
+
+```{r}
+# Model penuh
+full_model1 <- lm(Y ~ X + Pupuk, data = soal1)
+
+# Ringkasan model penuh
+summary(full_model1)
+
+# Membandingkan model penuh dengan model direduksi
+anova(model1, full_model1)
+```
+
+```{r}
+# Melakukan ANCOVA
+model1 <- aov(Y ~ Pupuk + X, data = soal1)
+summary(model1)
+
+# Menghitung rata-rata perlakuan yang disesuaikan
+library(dplyr)
+adjusted_means1 <- soal1 %>%
+  group_by(Pupuk) %>%
+  summarise(
+    adjusted_mean = mean(Y) - coef(model1)["X"] * (mean(X) - mean(soal1$X))
+  )
+adjusted_means1
+```
+
+# Soal 2: Kinerja Mesin dengan Jenis Pelumas
+
+```{r}
+# Membuat data frame
+soal2 <- data.frame(
+  Mesin= rep(c("A", "B", "C"), each = 4),
+  X = c(50,52,48,49,45,47,46,44,55,57,54,53),
+  Y = c(60,62,58,59,55,57,56,54,70,72,68,69)
+)
+
+# Regresi linier
+model2 <- lm(Y ~ X, data = soal2)
+
+# Ringkasan model regresi
+summary(model2)
+
+# Menambahkan Y yang dikoreksi (residual)
+soal2$Y_koreksi <- residuals(model2)
+
+# Tampilkan data dengan Y yang dikoreksi
+print(soal2)
+```
+
+```{r}
+# Model penuh
+full_model2 <- lm(Y ~ X + Mesin, data = soal2)
+
+# Ringkasan model penuh
+summary(full_model2)
+
+# Membandingkan model penuh dengan model direduksi
+anova(model2, full_model2)
+```
+
+```{r}
+# Melakukan ANCOVA
+model2 <- aov(Y ~ Mesin + X, data = soal2)
+summary(model2)
+
+# Menghitung rata-rata perlakuan yang disesuaikan
+library(dplyr)
+adjusted_means2 <- soal2 %>%
+  group_by(Mesin) %>%
+  summarise(
+    adjusted_mean = mean(Y) - coef(model2)["X"] * (mean(X) - mean(soal2$X))
+  )
+adjusted_means2
+```
+
+# Soal 3: Kekerasan Beton dengan Tiga Campuran Material
+
+```{r}
+# Membuat data frame
+soal3 <- data.frame(
+  Beton = rep(c("A", "B", "C"), each = 4),
+  X = c(10,11,12,10.5,12,13,14,12.5,15,14,13,15.5),
+  Y = c(30,32,31,29,28,29,27,28.5,25,24,26,24.5)
+)
+
+# Regresi linier
+model3 <- lm(Y ~ X, data = soal3)
+
+# Ringkasan model regresi
+summary(model3)
+
+# Menambahkan Y yang dikoreksi (residual)
+soal3$Y_koreksi <- residuals(model3)
+
+# Tampilkan data dengan Y yang dikoreksi
+print(soal3)
+```
+
+```{r}
+# Model penuh
+full_model3 <- lm(Y ~ X + Beton, data = soal3)
+
+# Ringkasan model penuh
+summary(full_model3)
+
+# Membandingkan model penuh dengan model direduksi
+anova(model3, full_model3)
+```
+
+```{r}
+# Melakukan ANCOVA
+model3 <- aov(Y ~ Beton + X, data = soal3)
+summary(model3)
+
+# Menghitung rata-rata perlakuan yang disesuaikan
+library(dplyr)
+adjusted_means3 <- soal3 %>%
+  group_by(Beton) %>%
+  summarise(
+    adjusted_mean = mean(Y) - coef(model3)["X"] * (mean(X) - mean(soal3$X))
+  )
+adjusted_means3
+```
+
+# Soal 4: Pengaruh Tiga Jenis Ban terhadap Jarak Pengereman
+
+```{r}
+# Membuat data frame
+soal4 <- data.frame(
+  Ban = rep(c("A", "B", "C"), each = 4),
+  X = c(80,85,75,90,90,95,85,100,100,105,95,110),
+  Y = c(35,38,33,37,40,42,38,45,50,53,48,55)
+)
+
+# Regresi linier
+model4 <- lm(Y ~ X, data = soal4)
+
+# Ringkasan model regresi
+summary(model4)
+
+# Menambahkan Y yang dikoreksi (residual)
+soal4$Y_koreksi <- residuals(model4)
+
+# Tampilkan data dengan Y yang dikoreksi
+print(soal4)
+```
+
+```{r}
+# Model penuh
+full_model4 <- lm(Y ~ X + Ban, data = soal4)
+
+# Ringkasan model penuh
+summary(full_model4)
+
+# Membandingkan model penuh dengan model direduksi
+anova(model4, full_model4)
+```
+
+```{r}
+# Melakukan ANCOVA
+model4 <- aov(Y ~ Ban + X, data = soal4)
+summary(model4)
+
+# Menghitung rata-rata perlakuan yang disesuaikan
+library(dplyr)
+adjusted_means4 <- soal4 %>%
+  group_by(Ban) %>%
+  summarise(
+    adjusted_mean = mean(Y) - coef(model4)["X"] * (mean(X) - mean(soal4$X))
+  )
+adjusted_means4
+```
+
+# Soal 5: Pengaruh Bahan Bakar terhadap Emisi Kendaraan
+
+```{r}
+# Membuat data frame
+soal5 <- data.frame(
+  BahanBakar = rep(c("A", "B", "C"), each = 4),
+  X = c(1000,1100,1200,1050,1500,1600,1400,1550,2000,2100,1900,2050),
+  Y = c(120,130,125,118,140,150,145,138,180,190,170,185)
+)
+
+# Regresi linier
+model5 <- lm(Y ~ X, data = soal5)
+
+# Ringkasan model regresi
+summary(model5)
+
+# Menambahkan Y yang dikoreksi (residual)
+soal5$Y_koreksi <- residuals(model5)
+
+# Tampilkan data dengan Y yang dikoreksi
+print(soal5)
+```
+
+```{r}
+# Model penuh
+full_model5 <- lm(Y ~ X + BahanBakar, data = soal5)
+
+# Ringkasan model penuh
+summary(full_model5)
+
+# Membandingkan model penuh dengan model direduksi
+anova(model5, full_model5)
+```
+
+```{r}
+# Melakukan ANCOVA
+model5 <- aov(Y ~ BahanBakar + X, data = soal5)
+summary(model5)
+
+# Menghitung rata-rata perlakuan yang disesuaikan
+library(dplyr)
+adjusted_means5 <- soal5 %>%
+  group_by(BahanBakar) %>%
+  summarise(
+    adjusted_mean = mean(Y) - coef(model5)["X"] * (mean(X) - mean(soal5$X))
+  )
+adjusted_means5
+```
