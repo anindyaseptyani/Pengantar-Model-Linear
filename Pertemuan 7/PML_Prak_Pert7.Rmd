@@ -1,0 +1,665 @@
+---
+title: "PML_Prak_Pert7"
+author: "Anindya Septyani G1401221074"
+date: "2024-09-23"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Uji Hipotesis Model Berpangkat Penuh
+
+## Pengujian Kecukupan Model
+
+### **Tujuan**
+
+Pengujian kecukupan model bertujuan untuk mengetahui apakah model regresi linier yang dibangun sudah mampu menjelaskan variasi dari variabel respon $y$ dengan baik. Dalam konteks ini, kita menguji apakah semua koefisien regresi sama dengan nol, yang berarti bahwa tidak ada variabel independen yang memiliki pengaruh signifikan terhadap $y$
+
+### **Hipotesis**
+
+-   Hipotesis nol ($H0$) : Semua koefisien regresi $\beta_j$ sama dengan nol.
+
+$$
+H_0 : \beta_1 = \beta_2 = ... = \beta_p = 0
+$$
+
+-   Hipotesis alternatif $H1$ : Minimal ada satu koefisien regresi $\beta_j$ yang tidak sama dengan nol.
+
+$$
+H_1: \exists \beta_j\neq0 \text{ untuk minimal satu}  \text{ j}
+$$
+
+### **Langkah-langkah**
+
+1.  **Model Regresi Linier Penuh:** Bentuk umum model regresi linier dapat ditulis sebagai:
+
+$$
+y_1=\beta_0+\beta_1x_{i1}+\beta_2x_{i2}+...+\beta_px_{ip}+\epsilon_i
+$$
+
+2.  **Pendugaan Parameter:** Parameter $\beta$ diduga menggunakan metode **Least Squares**, sehingga diperoleh penduga:
+
+$$
+\hat\beta=(X'X)^{-1}X'y
+$$Dimana $X$ adalah matriks desain dan y adalah vektor respon
+
+3.  **Analisis Varians (ANOVA):** Uji kecukupan model dilakukan dengan menggunakan analisis varians (ANOVA), dimana kita membandingkan **Jumlah Kuadrat Regresi (JKReg) dengan Jumlah Kuadrat Residu (JKRes).**
+
+$$
+F=\frac{\text{JKRReg}/\text{df}_1}{\text{JKRRes}/\text{df}_2}
+$$
+
+Dimana:
+
+-   $\text{df}_1 = p$ adalah derajat bebas untuk JKRReg.
+
+-   $\text{df}_2 = n-p-1$ adalah derajat bebas untuk JKRRes.
+
+4.  **Keputusan:** Jika nilai F yang diperoleh lebih besar dari nilai kritis pada tabel F untuk tingkat signifikansi tertentu ($\alpha$), maka kita menolak $H_0$ dan menyimpulkan bahwa model regresi layak digunakan.
+
+### Implementasi R
+
+```{r}
+# Membuat Data Contoh
+set.seed(123)
+n <- 100 # Jumlah Observasi
+
+# Variabel Prediktor
+x1 <- rnorm(n, mean = 50, sd = 10)
+x2 <- rnorm(n, mean = 30, sd = 5)
+x3 <- rnorm(n, mean = 20, sd = 3)
+
+# Variabel respon (y) dengan hubungan linier
+y <- 5 + 1.5 * x1 - 2 * x2 + 3 * x3 + rnorm(n, mean = 0, sd = 10)
+
+# Menggabungkan variabel menjadi sebuah data frame
+data <- data.frame(y = y, x1 = x1, x2 = x2, x3 = x3)
+
+# Melihat ringllasan dari data
+summary(data)
+```
+
+```{r}
+# Membuat model regresi liniear penuh dengan semua variabel prediktor dalam data
+model_full <- lm(y~., data = data)
+
+# Melakukan uji ANOVA untuk menguji kecukupan model
+anova_results <- anova(model_full)
+
+# Melihat hasil uji ANOVA
+print(anova_results)
+```
+
+## Pengujian Hipotesis Subset Parameter
+
+### **Tujuan**
+
+Pengujian hipotesis subset parameter bertujuan untuk mengetahui apakah subset tertentu dari parameter (koefisien regresi) dalam model regresi linier berpengaruh signifikan terhadap variabel respon $y$. Ini berguna ketika kita ingin menguji efek dari beberapa variabel independednn tertentu sambil mengendalikan variabel independen lainnya.
+
+### **Hipotesis**
+
+-   **Hipotesis nol (H0): Subset parameter** $\gamma$ sama dengan nol.
+
+$$
+H_0:\gamma=0
+$$
+
+-   **Hipotesis alternatif (H1): Subset parameter** $\gamma$ tidak sama dengan nol.
+
+$$
+H_1:\gamma\neq 0
+$$
+
+### **Langkah-langkah**
+
+1.  **Model** **Tereduksi:** Bentuk model tereduksi adalah model yang tidak memasukkan subset parameter yang ingin diuji:
+
+$$
+y_i = \beta_0 +\beta_{r+1}x_{i,r+1}+...+\beta_px_{ip} + \epsilon_i
+$$
+
+2.  **Analisis Varians (ANOVA):** Perbedaan antara model penuh dan model tereduksi diuji dengan analisis varians:
+
+$$
+F = \frac{(\text{JKReg}_{\text{penuh}} - \text{JKReg}_{\text{tereduksi}}) / r}{\text{JKRes}_{\text{penuh}} / \text{df}_2}
+$$
+
+Dimana r adalah jumlah parameter yang dihilangkan dalam model tereduksi.
+
+3.  **Keputusan:** Jika nilai F yang diperoleh lebih besar dari nilai kritis pada tabel F untuk tingkat signifikansi tertentu ($\alpha$), maka kita menolak $H_0$ dan menyimpulkan bahwa subset parameter tersebut berpengaruh signifikan terhadap variabel respon.
+
+### Implementasi R
+
+```{r}
+# Membuat model regresi tereduksi (tanpa parameter subset)
+model_reduced <- lm(y ~ x1 + x3, data = data)
+
+# Melakukan uji ANOVA untuk membandingkan model penuh dan tereduksi
+anova(model_reduced, model_full)
+```
+
+## Kesimpulan
+
+-   **Pengujian Kecukupan Model:** Digunakan untuk menilai apakah model regresi yang dibangun cukup baik dalam menjelaskan variabilitas data respon
+
+-   **Pengujian Hipotesis Subset Parameter:** Digunakan untuk menguji apakah subset parameter tertentu dalam model regresi berpengaruh signifikan setelah memperhitungkan variabel lain dalam model.
+
+Kedua pengujian ini penting untuk memastikan bahwa model yang dibangun tidak hanya sesuai secara statistik tetapi juga memiliki interpretasi yang relevan dalam konteks penelitian yang dilakukan.
+
+## Latihan Soal
+
+### Soal 1
+
+Dalam industri farmasi, prediksi stabilitas obat sangat penting untuk menentukan umur simpan. Sebuah studi dilakukan untuk memprediksi stabilitas obat dalam kondisi penyimpanan normal berdasarkan tes percepatan di laboratorium. Dua variabel yang digunakan adalah:
+
+-   **y:** Tingkat degradasi obat dalam kondisi penyimpanan normal.
+
+-   **x:** Tingkat degradasi obat dari tes percepatan di laboratorium.
+
+Model regresi linear sederhana diasumsikan dan data berikut diperoleh:
+
+|  X  |  Y  |
+|:---:|:---:|
+|  2  | 1,5 |
+|  3  | 2,1 |
+|  4  | 3,0 |
+|  5  | 4,2 |
+|  6  | 5,0 |
+|  7  | 6,2 |
+
+Uji hipotesis bahwa $H_0:\beta=0$ versus $H_1:\beta\neq0$ pada tingkat signifikansi 0,05.
+
+**Model Regresi:**
+
+$$ Y_i = \beta_0+\beta_1x_1+\epsilon_i, \text{di mana i = 1,2,3,...,6} $$
+
+**Hipotesis:**
+
+$$ H_0:\beta=0;\text{ model tidak valid} $$
+
+$$ H_1:\beta\neq0;\text{ model valid} $$
+
+$$ \alpha = 0.05 $$
+
+**Statistik Uji:**
+
+```{r}
+# Data Soal 
+x1 <- c(2, 3, 4, 5, 6, 7)
+Y1 <- c(1.5, 2.1, 3.0, 4.2, 5.0, 6.2)
+X1 <- cbind(1, x1)
+X1
+n1 <- 6
+```
+
+```{r}
+XtX1 <- t(X1) %*% X1
+XtX1
+
+XtX_inv1 <- solve(XtX1)
+XtX_inv1
+
+YtX1 <- t(Y1) %*% X1
+YtX1
+
+XtY1 <- t(X1) %*% Y1
+XtY1
+```
+
+```{r}
+JKT1 <- t(Y1) %*% Y1
+cat("JKT: ", JKT1, "\n")
+
+JKR1 <- YtX1 %*% XtX_inv1 %*% XtY1 
+cat("JKR: ", JKR1, "\n")
+
+JKE1 <- JKT1 - JKR1
+cat("JKE: ", JKE1, "\n")
+
+KTR1 <- JKR1 / 2
+cat("KTR: ", KTR1, "\n")
+
+KTE1 <- JKE1 / (n1 - 2)
+cat("KTE: ", KTE1, "\n")
+
+F1 <- KTR1 / KTE1
+cat("Fhitung: ", F1, "\n")
+
+ftab1 <- qf(0.95, df1 = 2, df2 = 3)
+cat("Ftabel: ", ftab1, "\n")
+```
+
+**Kriteria Uji:**
+
+Tolak $H_0$ jika $F_{hitung}>F\alpha;2;4$
+
+Karena $F_{hitung} = 1412.721>F_{tabel} =9.552094$ , maka **tolak H0**
+
+**Kesimpulan:**
+
+Model valid dan dapat digunakan pada taraf arti 5%.
+
+### Soal 2
+
+Dalam penelitian pertanian, kemampuan tanaman untuk bertahan dalam kondisi kekeringan sangat penting untuk pengembangan varietas unggul. Sebuah studi dilakukan untuk memprediksi pertumbuhan tanaman di lapangan berdasarkan tes kekeringan di rumah kaca. Dua variabel yang digunakan adalah y, yaitu laju pertumbuhan tanaman di lapangan, dan x, yaitu laju pertumbuhan tanaman dari tes kekeringan di rumah kaca. Model regresi linear sederhana diasumsikan dan data berikut diperoleh:
+
+|  x  |  y  |
+|:---:|:---:|
+|  1  | 0,8 |
+|  2  | 1,3 |
+|  3  | 2,1 |
+|  4  | 2,9 |
+|  5  | 3,6 |
+|  6  | 4,5 |
+
+Uji hipotesis bahwa $H_0:\beta=0$ versus $H_1:\beta\neq0$ pada tingkat signifikansi 0,05.
+
+**Model Regresi:**
+
+$$ Y_i = \beta_0+\beta_1x_1+\epsilon_i, \text{di mana i = 1,2,3,...,6} $$
+
+**Hipotesis:**
+
+$$ H_0:\beta=0;\text{ model tidak valid} $$
+
+$$ H_1:\beta\neq0;\text{ model valid} $$
+
+$$ \alpha = 0.05 $$
+
+**Statistik Uji:**
+
+```{r}
+# Data Soal 
+x2 <- c(1, 2, 3, 4, 5, 6)
+Y2 <- c(0.8, 1.3, 2.1, 2.9, 3.6, 4.5)
+X2 <- cbind(1, x2)
+X2
+n2 <- 6
+```
+
+```{r}
+XtX2 <- t(X2) %*% X2
+XtX2
+
+XtX_inv2 <- solve(XtX2)
+XtX_inv2
+
+YtX2 <- t(Y2) %*% X2
+YtX2
+
+XtY2 <- t(X2) %*% Y2
+XtY2
+```
+
+```{r}
+JKT2 <- t(Y2) %*% Y2
+cat("JKT: ", JKT2, "\n")
+
+JKR2 <- YtX2 %*% XtX_inv2 %*% XtY2 
+cat("JKR: ", JKR2, "\n")
+
+JKE2 <- JKT2 - JKR2
+cat("JKE: ", JKE2, "\n")
+
+KTR2 <- JKR2 / 2
+cat("KTR: ", KTR2, "\n")
+
+KTE2 <- JKE2 / (n2 - 2)
+cat("KTE: ", KTE2, "\n")
+
+F2 <- KTR2 / KTE2
+cat("Fhitung: ", F2, "\n")
+
+ftab2 <- qf(0.95, df1 = 2, df2 = 3)
+cat("Ftabel: ", ftab2, "\n")
+```
+
+**Kriteria Uji:**
+
+Tolak $H_0$ jika $F_{hitung}>F\alpha;2;4$
+
+Karena $F_{hitung} = 2053.789>F_{tabel} =9.552094$ , maka **tolak H0**
+
+**Kesimpulan:**
+
+Model valid dan dapat digunakan pada taraf arti 5%.
+
+### Soal 3
+
+Dalam penelitian energi terbarukan, memprediksi keluaran energi dari panel surya di lapangan berdasarkan pengujian di laboratorium sangat penting untuk perencanaan. Sebuah studi dilakukan untuk memprediksi keluaran energi di lapangan berdasarkan tes di laboratorium. Dua variabel yang digunakan adalah y, yaitu keluaran energi di lapangan (dalam kWh), dan x, yaitu keluaran energi dari pengujian laboratorium (dalam kWh). Model regresi linear sederhana diasumsikan dan data berikut diperoleh:
+
+|  x  |  y   |
+|:---:|:----:|
+| 10  | 9,5  |
+| 12  |  11  |
+| 15  | 13,8 |
+| 18  |  17  |
+| 20  | 19,5 |
+| 25  | 24,8 |
+
+Uji hipotesis bahwa $H_0:\beta=0$ versus $H_1:\beta\neq0$ pada tingkat signifikansi 0,05.
+
+**Model Regresi:**
+
+$$ Y_i = \beta_0+\beta_1x_1+\epsilon_i, \text{di mana i = 1,2,3,...,6} $$
+
+**Hipotesis:**
+
+$$ H_0:\beta=0;\text{ model tidak valid} $$
+
+$$ H_1:\beta\neq0;\text{ model valid} $$
+
+$$ \alpha = 0.05 $$
+
+**Statistik Uji:**
+
+```{r}
+# Data Soal 
+x3 <- c(10, 12, 15, 18, 20, 25)
+Y3 <- c(9.5, 11, 13.8, 17, 19.5, 24.8)
+X3 <- cbind(1, x3)
+X3
+n3 <- 6
+```
+
+```{r}
+XtX3 <- t(X3) %*% X3
+XtX3
+
+XtX_inv3 <- solve(XtX3)
+XtX_inv3
+
+YtX3 <- t(Y3) %*% X3
+YtX3
+
+XtY3 <- t(X3) %*% Y3
+XtY3
+```
+
+```{r}
+JKT3 <- t(Y3) %*% Y3
+cat("JKT: ", JKT3, "\n")
+
+JKR3 <- YtX3 %*% XtX_inv3 %*% XtY3 
+cat("JKR: ", JKR3, "\n")
+
+JKE3 <- JKT3 - JKR3
+cat("JKE: ", JKE3, "\n")
+
+KTR3 <- JKR3 / 2
+cat("KTR: ", KTR3, "\n")
+
+KTE3 <- JKE3 / (n3 - 2)
+cat("KTE: ", KTE3, "\n")
+
+F3 <- KTR3 / KTE3
+cat("Fhitung: ", F3, "\n")
+
+ftab3 <- qf(0.95, df1 = 2, df2 = 3)
+cat("Ftabel: ", ftab3, "\n")
+```
+
+**Kriteria Uji:**
+
+Tolak $H_0$ jika $F_{hitung}>F\alpha;2;4$
+
+Karena $F_{hitung} = 5962.118>F_{tabel} =9.552094$ , maka **tolak H0**
+
+**Kesimpulan:**
+
+Model valid dan dapat digunakan pada taraf arti 5%.
+
+### Soal 4
+
+Dalam penelitian otomotif, estimasi konsumsi bahan bakar di jalan raya berdasarkan pengujian di laboratorium sangat penting untuk pengembangan kendaraan hemat energi. Sebuah studi dilakukan untuk memprediksi konsumsi bahan bakar di jalan raya berdasarkan pengujian di laboratorium. Dua variabel yang digunakan adalah y, yaitu konsumsi bahan bakar di jalan raya (dalam km/l), dan x, yaitu konsumsi bahan bakar dari pengujian laboratorium (dalam km/l). Model regresi linear sederhana diasumsikan dan data berikut diperoleh:
+
+|  x  |  y   |
+|:---:|:----:|
+| 12  | 11,2 |
+| 14  | 13,1 |
+| 16  |  15  |
+| 18  | 17,3 |
+| 20  | 19,6 |
+| 22  |  21  |
+
+Uji hipotesis bahwa $H_0:\beta=0$ versus $H_1:\beta\neq0$ pada tingkat signifikansi 0,05.
+
+**Model Regresi:**
+
+$$ Y_i = \beta_0+\beta_1x_1+\epsilon_i, \text{di mana i = 1,2,3,...,6} $$
+
+**Hipotesis:**
+
+$$ H_0:\beta=0;\text{ model tidak valid} $$
+
+$$ H_1:\beta\neq0;\text{ model valid} $$
+
+$$ \alpha = 0.05 $$
+
+**Statistik Uji:**
+
+```{r}
+# Data Soal 
+x4 <- c(12, 14, 16, 18, 20, 22)
+Y4 <- c(11.2, 13.1, 15, 17.3, 19.6, 21)
+X4 <- cbind(1, x4)
+X4
+n4 <- 6
+```
+
+```{r}
+XtX4 <- t(X4) %*% X4
+XtX4
+
+XtX_inv4 <- solve(XtX4)
+XtX_inv4
+
+YtX4 <- t(Y4) %*% X4
+YtX4
+
+XtY4 <- t(X4) %*% Y4
+XtY4
+```
+
+```{r}
+JKT4 <- t(Y4) %*% Y4
+cat("JKT: ", JKT4, "\n")
+
+JKR4 <- YtX4 %*% XtX_inv4 %*% XtY4 
+cat("JKR: ", JKR4, "\n")
+
+JKE4 <- JKT4 - JKR4
+cat("JKE: ", JKE4, "\n")
+
+KTR4 <- JKR4 / 2
+cat("KTR: ", KTR4, "\n")
+
+KTE4 <- JKE4 / (n4 - 2)
+cat("KTE: ", KTE4, "\n")
+
+F4 <- KTR4 / KTE4
+cat("Fhitung: ", F4, "\n")
+
+ftab4 <- qf(0.95, df1 = 2, df2 = 3)
+cat("Ftabel: ", ftab4, "\n")
+```
+
+**Kriteria Uji:**
+
+Tolak $H_0$ jika $F_{hitung}>F\alpha;2;4$
+
+Karena $F_{hitung} = 13124.99>F_{tabel} =9.552094$ , maka **tolak H0**
+
+**Kesimpulan:**
+
+Model valid dan dapat digunakan pada taraf arti 5%.
+
+### Soal 5
+
+Dalam penelitian lingkungan, memprediksi kualitas udara di daerah perkotaan berdasarkan pengukuran di laboratorium sangat penting untuk pengendalian polusi. Sebuah studi dilakukan untuk memprediksi tingkat polusi udara di perkotaan berdasarkan pengujian di laboratorium. Dua variabel yang digunakan adalah y, yaitu tingkat polusi di lapangan (dalam satuan tertentu), dan x, yaitu tingkat polusi dari pengujian laboratorium (dalam satuan yang sama). Model regresi linear sederhana diasumsikan dan data berikut diperoleh:
+
+|  x  |  y   |
+|:---:|:----:|
+| 30  |  28  |
+| 35  | 32,5 |
+| 40  |  38  |
+| 45  | 43,7 |
+| 50  |  49  |
+| 55  | 54,5 |
+
+Uji hipotesis bahwa $H_0:\beta=0$ versus $H_1:\beta\neq0$ pada tingkat signifikansi 0,05.
+
+**Model Regresi:**
+
+$$ Y_i = \beta_0+\beta_1x_1+\epsilon_i, \text{di mana i = 1,2,3,...,6} $$
+
+**Hipotesis:**
+
+$$ H_0:\beta=0;\text{ model tidak valid} $$
+
+$$ H_1:\beta\neq0;\text{ model valid} $$
+
+$$ \alpha = 0.05 $$
+
+**Statistik Uji:**
+
+```{r}
+# Data Soal 
+x5 <- c(30, 35, 40, 45, 50, 55)
+Y5 <- c(28, 32.5, 38, 43.7, 49, 54.5)
+X5 <- cbind(1, x5)
+X5
+n5 <- 6
+```
+
+```{r}
+XtX5 <- t(X5) %*% X5
+XtX5
+
+XtX_inv5 <- solve(XtX5)
+XtX_inv5
+
+YtX5 <- t(Y5) %*% X5
+YtX5
+
+XtY5 <- t(X5) %*% Y5
+XtY5
+```
+
+```{r}
+JKT5 <- t(Y5) %*% Y5
+cat("JKT: ", JKT5, "\n")
+
+JKR5 <- YtX5 %*% XtX_inv5 %*% XtY5 
+cat("JKR: ", JKR5, "\n")
+
+JKE5 <- JKT5 - JKR5
+cat("JKE: ", JKE5, "\n")
+
+KTR5 <- JKR5 / 2
+cat("KTR: ", KTR5, "\n")
+
+KTE5 <- JKE5 / (n5 - 2)
+cat("KTE: ", KTE3, "\n")
+
+F5 <- KTR5 / KTE5
+cat("Fhitung: ", F5, "\n")
+
+ftab5 <- qf(0.95, df1 = 2, df2 = 3)
+cat("Ftabel: ", ftab5, "\n")
+```
+
+**Kriteria Uji:**
+
+Tolak $H_0$ jika $F_{hitung}>F\alpha;2;4$
+
+Karena $F_{hitung} = 44874.41>F_{tabel} =9.552094$ , maka **tolak H0**
+
+**Kesimpulan:**
+
+Model valid dan dapat digunakan pada taraf arti 5%.
+
+### Soal 6
+
+Sistem jaringan komputer terdiri dari tiiga elemen struktural dasar: jumlah perangkat (X1), panjang kabel (X2), dan jumlah titik sambungan (X3). Penelitian tentang biaya pemasangan jaringan komputer dilakukan berdasarkan data berikut:
+
+| Biaya (y) | Perangkat (X1) | Panjang Kabel (X2) | Titik Sambungan (X3) |
+|:---------:|:--------------:|:------------------:|:--------------------:|
+|    35     |       5        |         50         |          10          |
+|    22     |       3        |         30         |          8           |
+|   95,5    |       15       |        150         |          25          |
+|   45,2    |       8        |         75         |          12          |
+|   120,3   |       10       |        200         |          30          |
+
+**Pertanyaan:** Buatlah ANOVA dan Ujilah Hipotesis
+
+**Hipotesis:**
+
+-   $H_0:\gamma_1=0$ (Model reduce memadai)
+
+-   $H_1:\gamma_1\neq0$ (Model lengkap lebih memadai)
+
+**Statistik Uji:**
+
+Model: $y=\beta x+\epsilon$
+
+```{r}
+# Data Soal 
+x1_6 <- c(5, 3, 15, 8, 10)
+x2_6 <- c(50, 30, 150, 75, 200)
+x3_6 <- c(10, 8, 25, 12, 30)
+Y6 <- c(35, 22, 95.5, 45.2, 120.3)
+df6 <- data.frame(Y6, x1_6, x2_6, x3_6)
+df6
+n6 <- 5
+```
+
+**Anova:**
+
+```{r}
+model_anova6 <- aov(Y6 ~ x1_6 + x2_6 + x3_6, data = df6)
+summary(model_anova6)
+```
+
+```{r}
+XtX6 <- t(X6) %*% X6
+XtX6
+
+XtX_inv6 <- solve(XtX6)
+XtX_inv6
+
+YtX6 <- t(Y6) %*% X6
+YtX6
+
+XtY6 <- t(X6) %*% Y6
+XtY6
+
+JKT6 <- t(Y6) %*% Y6
+JKT6
+
+JKR6Ml <- YtX6 %*% XtX_inv6 %*% XtY6 
+JKR6Ml
+
+JKR6Mr <- (t(Y6) %*% x2_6) %*% (solve(t(x2_6) %*% x2_6)) %*% (t(x2_6) %*% Y6)
+JKR6Mr
+
+Pengaruh6 <- JKR6Ml- JKR6Mr
+Pengaruh6
+
+JKE6 <- JKT6 - JKR6Ml
+JKE6
+
+KTR6 <- JKR6 / 2
+KTR6
+
+KTE6 <- JKE6 / (n6 - 2)
+KTE6
+
+F6 <- KTR6 / KTE6
+F6
+
+ftab6 <- qf(0.95, df1 = 2, df2 = 3)
+ftab6
+```
